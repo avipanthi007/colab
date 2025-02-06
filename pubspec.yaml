@@ -46,6 +46,8 @@ dependencies:
   dio: ^5.7.0
   logger: ^2.5.0
   dartz: ^0.10.1
+  percent_indicator: ^4.2.4
+  syncfusion_flutter_charts: ^23.1.44
 
 dev_dependencies:
   flutter_test:

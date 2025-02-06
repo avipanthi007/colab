@@ -24,7 +24,10 @@ class AppColors {
   static const Color buttonBackground = Color(0xFFf1f1f9);
   static const Color softColor = Color(0xFF252836);
   static const Color fieldColor = Color(0xFFF6F8FB);
+  static const Color lightBackground = Color(0xFFF6F8FB);
   static const Color orange = Colors.orange;
+  static const Color red = Colors.red;
+  static const Color green = Colors.green;
 
   static const RadialGradient bg = RadialGradient(colors: [
     Color(0xffD59BAB),

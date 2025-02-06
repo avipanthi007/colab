@@ -32,110 +32,98 @@ class _LoginPageState extends State<LoginPage> {
             width: 50.w,
           ),
           Center(
-            child: Card(
-              elevation: 8,
-              child: Container(
-                width: 90.w,
-                padding: EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(15)),
-                child: Column(
-                  children: [
-                    Text(
-                      TextConstant.log_In,
-                      style: Theme.of(context)
-                          .textTheme
-                          .displayMedium!
-                          .copyWith(fontWeight: FontWeight.bold, fontSize: 20),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          TextConstant.userName,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.primaryBlack,
-                                  fontSize: 14.px),
-                        ),
-                        Spacer()
-                      ],
-                    ),
-                    CustomTextField(
-                      margin: EdgeInsets.all(0),
-                      controller: authcontroller.usernameController.value,
-                      label: TextConstant.enterUserName,
-                      //borderRadius: BorderRadius.circular(25),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          TextConstant.enterpassword,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.primaryBlack,
-                                  fontSize: 14.px),
-                        ),
-                        Spacer()
-                      ],
-                    ),
-                    CustomTextField(
-                      margin: EdgeInsets.all(0),
-                      controller: authcontroller.passwordController.value,
-                      label: TextConstant.password,
-                      //borderRadius: BorderRadius.circular(25),
-                      suffix: Icon(Icons.remove_red_eye),
-                      obscureText: true,
-                    ),
-                    Row(
-                      children: [
-                        Spacer(),
-                        Text(
-                          TextConstant.forgotPassword,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.primaryBlack,
-                                  fontSize: 14.px),
-                        ),
-                        SizedBox(
-                          width: 4.w,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5.h,
-                    ),
-                    Obx(
-                      () => authcontroller.isLoading.value
-                          ? Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : CustomButton(
-                              width: 50,
-                              ontap: () async {
-                                authcontroller.login();
-                              },
-                              titleText: TextConstant.login,
-                              borderRadius: 25,
-                            ),
-                    ),
-                  ],
-                ),
+            child: Container(
+              width: 90.w,
+              padding: EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(15)),
+              child: Column(
+                children: [
+                  Text(
+                    TextConstant.log_In,
+                    style: Theme.of(context)
+                        .textTheme
+                        .displayMedium!
+                        .copyWith(fontWeight: FontWeight.bold, fontSize: 20),
+                  ),
+                  SizedBox(
+                    height: 2.h,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        TextConstant.userName,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primaryBlack,
+                            fontSize: 14.px),
+                      ),
+                      Spacer()
+                    ],
+                  ),
+                  CustomTextField(
+                    margin: EdgeInsets.all(0),
+                    controller: authcontroller.usernameController.value,
+                    label: TextConstant.enterUserName,
+                    //borderRadius: BorderRadius.circular(25),
+                  ),
+                  SizedBox(
+                    height: 2.h,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        TextConstant.enterpassword,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primaryBlack,
+                            fontSize: 14.px),
+                      ),
+                      Spacer()
+                    ],
+                  ),
+                  CustomTextField(
+                    margin: EdgeInsets.all(0),
+                    controller: authcontroller.passwordController.value,
+                    label: TextConstant.password,
+                    //borderRadius: BorderRadius.circular(25),
+                    suffix: Icon(Icons.remove_red_eye),
+                    obscureText: true,
+                  ),
+                  Row(
+                    children: [
+                      Spacer(),
+                      Text(
+                        TextConstant.forgotPassword,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primaryBlack,
+                            fontSize: 14.px),
+                      ),
+                      SizedBox(
+                        width: 4.w,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 5.h,
+                  ),
+                  Obx(
+                    () => authcontroller.isLoading.value
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : CustomButton(
+                            width: 50,
+                            ontap: () async {
+                              authcontroller.login();
+                            },
+                            titleText: TextConstant.login,
+                            borderRadius: 25,
+                          ),
+                  ),
+                ],
               ),
             ),
           )

@@ -157,16 +157,16 @@ class AppTheme {
   static ColorScheme lightColorScheme = const ColorScheme.light(
     brightness: Brightness.light,
     primary: AppColors.primaryBlack,
-    onPrimary: AppColors.white,
+    onPrimary: AppColors.lightBackground,
     primaryContainer: AppColors.labelColor,
     primaryFixed: AppColors.borderColor,
     secondary: AppColors.primaryColor2,
-    onSecondary: AppColors.white,
+    onSecondary: AppColors.lightBackground,
     error: Colors.red,
     onError: AppColors.white,
-    surface: AppColors.backgroundColor,
+    surface: AppColors.lightBackground,
     onSurface: AppColors.black,
-    background: AppColors.backgroundColor,
+    background: AppColors.lightBackground,
     onBackground: AppColors.black,
   );
 
@@ -186,7 +186,7 @@ class AppTheme {
 
   static ThemeData lightTheme = ThemeData(
     primaryColor: AppColors.primaryBlack,
-    scaffoldBackgroundColor: AppColors.backgroundColor,
+    scaffoldBackgroundColor: AppColors.lightBackground,
     colorScheme: lightColorScheme,
     iconTheme: const IconThemeData(color: AppColors.black),
     appBarTheme: AppBarTheme(

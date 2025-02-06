@@ -33,13 +33,14 @@ class CustomSmallButton extends StatelessWidget {
         width: width.w,
         decoration: BoxDecoration(
             color: backGroundColor,
-            border: Border.all(color: AppColors.primaryYellow),
             borderRadius: BorderRadius.circular(borderRadius)),
         child: Center(
             child: Text(
           titleText,
-          style:
-              Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 16.sp),
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium!
+              .copyWith(fontSize: 12.sp, color: AppColors.textWhiteColor),
         )),
       ),
     );

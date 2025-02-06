@@ -1,5 +1,4 @@
 class TextConstant {
-  static String cinemax = "CINEMAX";
   static String enterYourRegistered = "Enter your registered";
   static String phoneNumbertoSignUp = "Phone Number to Sign Up";
   static String signUp = "Sign Up";
@@ -8,70 +7,53 @@ class TextConstant {
   static String login = "Login";
   static String log_In = "Log In";
   static String orSignUpWith = "Or Sign up with";
-  static String tiffany = "Hi, Tiffany";
+
   static String welcomebackPleaseEnter = "Welcome back! Please enter";
-  static String yourDetails = "your details.";
+
   static String enterUserName = "Enter User Name";
   static String userName = "User Name";
   static String enterpassword = "Enter Password";
   static String password = "Password";
   static String forgotPassword = "Forgot Password? Reset";
-  static String letsGetStarted = "Let’s get started";
-  static String theLatestMoviesAndSeries = "The latest movies and series";
-  static String areHere = "are here";
+
   static String fullName = "Full Name";
   static String iAgreeToThe = "I agree to the ";
   static String termsAndServices = "Terms and Services";
   static String and = " and ";
   static String privacyPolicy = "Privacy Policy";
   static String registerSuccess = "Register Success";
-  static String downloads = "Downloads";
-  static String thereIsNoMovieYet = "There is no movie yet!";
-  static String findYourMovieByTypeTitleCategoriesYearsEtc =
-      "Find your movie by Type title,\ncategories, years, etc ";
-  static String action = "Action";
-  static String spiderManNoWayHome = "Spider-Man No Way\nHome";
-  static String downPercent = "1.25 of 1.78 GB | 75%";
-  static String downCompleted = "Action | 1.78 GB";
-  static String horror = "Horror";
-  static String fantasy = "Fantasy";
-  static String anime = "Anime";
-  static String romance = "Romance";
-  static String scifi = "Sci-fi";
-  static String comedy = "Comedy";
-  static String adventure = "Adventure";
-  static String genre = "Genre";
+
   static String all = "All";
-  static String animation = "Animation";
-  static String documentary = "Documentary";
-  static String smith = "Hello, Smith";
-  static String letsStreamYourFavoriteMovie =
-      "Let's stream your favorite movie";
+  static String showAll = "Show All";
+
   static String searchATitle = "Search a title...";
-  static String noMoviesAvailable = "No movies details available";
   static String unknownTitle = "Unknown title";
-  static String releaseDate = "Release Date: ";
+
   static String unknown = "Unknown";
   static String categories = "Categories";
-  static String mostPopular = "Most Popular";
+
   static String seeAll = "See All";
-  static String upcoming = "Upcoming";
-  static String typeTitle = "Type title, categories, years, etc";
-  static String today = "Today";
-  static String rating = "4.0";
-  static String premium = "Premium";
-  static String spiderManNoWay = "Spider-Man No Way.. ";
-  static String year = "2021";
-  static String minutes = "148 Minutes";
-  static String movie = "| Movie";
-  static String recommendForYou = "Recommend for you";
-  static String theJungleWaiting = "The Jungle Waiting";
-  static String lifeOfPI = "Life of PI";
-  static String dot = "DOt";
-  static String pg13 = "PG-13";
-  static String play = "Play";
-  static String title = "Title : ";
-  static String wishlist = "Wishlist";
-  static String movies = "Movie";
-  static String popularMovies = "Popular Movies";
+   static String labourData = "Labour Data";
+  static String activities = "Activities";
+  static String qualityChecklist= "Quality Checklist";
+  static String snag = "Snag";
+  static String deSnag = "De-Snag";
+  static String areaConcern = "Area Of Concern";
+
+  static String drawingMaster = "Drawing Master";
+  static String hindrance = "Hindrance";
+
+  static String threeSixtyImage = "360 Image";
+  static String tasks = "Tasks";
+  static String permits = "Permits";
+
+  static String requestInfo = "Request for info.";
+  static String eventSchedule = "Event Schedule";
+
+  static String gateentry= "Gate Entry";
+   static String storage = "Storage";
+
+  static String requestResource= "Request Resource";
+
+
 }
