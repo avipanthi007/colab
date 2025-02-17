@@ -14,4 +14,8 @@ class RoutePath {
   static String chooseAuth = "/chooseAuth";
   static String login = "/loginScreen";
   static String signUp = "/signupScreen";
+  static String permitTab = "/permitTab";
+  static String futurePermits = "/futurePermits";
+  static String createPermit = "/createPermit";
+  static String createPermitDetails = "/createPermitDetails";
 }

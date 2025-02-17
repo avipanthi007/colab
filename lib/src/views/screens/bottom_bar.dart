@@ -1,4 +1,5 @@
 import 'package:colab/core/theme/colors.dart';
+import 'package:colab/src/controllers/permits_controller.dart';
 import 'package:colab/src/views/screens/dashboard/dashboard_page.dart';
 import 'package:colab/src/views/screens/dashboard/my_task.dart';
 import 'package:colab/src/views/screens/dashboard/my_tools.dart';
@@ -15,14 +16,20 @@ class HomeBottomNavigationbar extends StatefulWidget {
 }
 
 class _HomeBottomNavigationbarState extends State<HomeBottomNavigationbar> {
+  @override
+  void initState() {
+    super.initState();
+    permitController.fetchPermitData();
+  }
+
+  final permitController = Get.find<PermitsController>();
   RxInt selectedIndex = 0.obs;
 
-  static List<Widget> _widgetOptions = <Widget>[
+  static List<Widget> widgetOptions = <Widget>[
     DashboardPage(),
     MyTask(),
     MyTools(),
     Profile(),
-    MyTask(),
   ];
 
   void _onItemTapped(int index) {
@@ -35,17 +42,29 @@ class _HomeBottomNavigationbarState extends State<HomeBottomNavigationbar> {
       canPop: true,
       child: Obx(
         () => Scaffold(
-          body: _widgetOptions.elementAt(selectedIndex.value),
+          body: widgetOptions.elementAt(selectedIndex.value),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: AppColors.primaryBlack,
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 35,
+            ),
+            onPressed: () {
+          
+            },
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             showSelectedLabels: false,
             showUnselectedLabels: false,
             items: [
-              _buildNavItem(Icons.home, 0),
-              _buildNavItem(Icons.pending_actions_rounded, 1),
-              _buildNavItem(Icons.add_circle_outline, 2),
-              _buildNavItem(Icons.info_rounded, 3),
-              _buildNavItem(Icons.account_circle_sharp, 4),
+              buildNavItem(Icons.home, 0),
+              buildNavItem(Icons.pending_actions_rounded, 1),
+              buildNavItem(Icons.info_rounded, 2),
+              buildNavItem(Icons.account_circle_sharp, 3),
             ],
             currentIndex: selectedIndex.value,
             onTap: _onItemTapped,
@@ -57,16 +76,16 @@ class _HomeBottomNavigationbarState extends State<HomeBottomNavigationbar> {
     );
   }
 
-  BottomNavigationBarItem _buildNavItem(IconData icon, int index) {
+  BottomNavigationBarItem buildNavItem(IconData icon, int index) {
     return BottomNavigationBarItem(
       icon: selectedIndex.value == index
           ? CircleAvatar(
-              radius: 30,
+              radius: 20,
               backgroundColor: AppColors.primaryYellow,
               child: Icon(
                 icon,
                 color: AppColors.white,
-                size: 35,
+                size: 25,
               ),
             )
           : Icon(icon, color: Colors.grey),

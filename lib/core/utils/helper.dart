@@ -26,3 +26,12 @@ class CustomToast {
         fontSize: 16.0);
   }
 }
+PopupMenuItem<dynamic> repeatedPopup(
+      {required String title, Function()? ontap}) {
+    return PopupMenuItem(
+      child: ListTile(
+        onTap: ontap,
+        title: Text(title),
+      ),
+    );
+  }

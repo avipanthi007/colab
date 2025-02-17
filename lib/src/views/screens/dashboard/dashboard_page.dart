@@ -1,10 +1,14 @@
 import 'package:colab/core/theme/colors.dart';
 import 'package:colab/core/utils/constants/imageConstant.dart';
 import 'package:colab/core/utils/constants/text_constant.dart';
+import 'package:colab/core/utils/helper.dart';
+import 'package:colab/main.dart';
+import 'package:colab/services/routing/route_path.dart';
 import 'package:colab/src/views/screens/dashboard/my_tools.dart';
 import 'package:colab/src/views/widgets/custom_small_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:sizer/sizer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -641,13 +645,13 @@ class _DashboardPageState extends State<DashboardPage>
                             .headlineMedium!
                             .copyWith(fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 2.h),
                       Expanded(
                         child: GridView(
                           physics: NeverScrollableScrollPhysics(),
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                            mainAxisExtent: 12.h,
+                            mainAxisExtent: 10.h,
                             crossAxisCount: 3,
                           ),
                           children: [
@@ -701,16 +705,6 @@ class _DashboardPageState extends State<DashboardPage>
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  PopupMenuItem<dynamic> repeatedPopup(
-      {required String title, Function()? ontap}) {
-    return PopupMenuItem(
-      child: ListTile(
-        onTap: ontap,
-        title: Text(title),
       ),
     );
   }
@@ -853,8 +847,8 @@ class _DashboardPageState extends State<DashboardPage>
       required String count,
       Color color = AppColors.textBlackColor}) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -947,12 +941,10 @@ class _DashboardPageState extends State<DashboardPage>
           img: Imageconstant.threeSixty,
           title: TextConstant.threeSixtyImage,
         ),
-        toolsGrid(
-          context,
-          img: Imageconstant.tasks,
-          title: TextConstant.permits,
-          ontap: (){}
-        ),
+        toolsGrid(context,
+            img: Imageconstant.tasks, title: TextConstant.permits, ontap: () {
+          context.push(RoutePath.permitTab);
+        }),
         toolsGrid(
           context,
           img: Imageconstant.requestInfo,
@@ -1038,12 +1030,10 @@ class _DashboardPageState extends State<DashboardPage>
             img: Imageconstant.threeSixty,
             title: TextConstant.threeSixtyImage,
           ),
-          toolsGrid(
-            context,
-            img: Imageconstant.tasks,
-            title: TextConstant.permits,
-            ontap: (){}
-          ),
+          toolsGrid(context,
+              img: Imageconstant.tasks, title: TextConstant.permits, ontap: () {
+            context.push(RoutePath.permitTab);
+          }),
           toolsGrid(
             context,
             img: Imageconstant.requestInfo,
@@ -1085,8 +1075,8 @@ class _DashboardPageState extends State<DashboardPage>
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12), color: AppColors.white),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset(
               img,
@@ -1105,4 +1095,19 @@ class _DashboardPageState extends State<DashboardPage>
       ),
     );
   }
+}
+
+enum ScreenSize {
+  mobile,
+  tablet,
+  laptop,
+}
+
+class ChartData {
+  ChartData(this.x, this.y1, this.y2, this.y3);
+
+  final String x;
+  final double y1;
+  final double y2;
+  final double y3;
 }
