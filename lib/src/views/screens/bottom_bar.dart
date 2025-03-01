@@ -20,6 +20,10 @@ class _HomeBottomNavigationbarState extends State<HomeBottomNavigationbar> {
   void initState() {
     super.initState();
     permitController.fetchPermitData();
+    permitController.approversData();
+    permitController.contractorsData();
+    permitController.laboursData();
+    permitController.getLocation();
   }
 
   final permitController = Get.find<PermitsController>();
@@ -50,9 +54,7 @@ class _HomeBottomNavigationbarState extends State<HomeBottomNavigationbar> {
               color: Colors.white,
               size: 35,
             ),
-            onPressed: () {
-          
-            },
+            onPressed: () {},
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,

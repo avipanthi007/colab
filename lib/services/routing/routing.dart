@@ -5,6 +5,7 @@ import 'package:colab/src/views/screens/authentication/splash_screen.dart';
 import 'package:colab/src/views/screens/bottom_bar.dart';
 import 'package:colab/src/views/screens/dashboard/permits/create_permit.dart';
 import 'package:colab/src/views/screens/dashboard/permits/create_permit_details.dart';
+import 'package:colab/src/views/screens/dashboard/permits/dynamic_list_update.dart';
 import 'package:colab/src/views/screens/dashboard/permits/future.dart';
 import 'package:colab/src/views/screens/dashboard/permits/permits_tab.dart';
 import 'package:flutter/material.dart';
@@ -52,10 +53,18 @@ class AppRouting {
               return const CreatePermit();
             }),
         GoRoute(
+         
             path: RoutePath.createPermitDetails,
             builder: (context, state) {
                final permitData = state.extra as PermitData;
               return  CreatePermitDetails(data: permitData,);
+            }),
+             GoRoute(
+         
+            path: RoutePath.dynamicListUpdate,
+            builder: (context, state) {
+             
+              return  DynamicListUpdate();
             }),
       ]);
 }

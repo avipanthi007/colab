@@ -5,4 +5,8 @@ class ApiConstants {
   static String login = "/validUser";
   static String expiredPermits =
       "/permit_trigger_list?client_id=1&project_id=1&mainId=35&type_of_date=EXPIRED&status=null&page=1";
+  static String approvers = "/drawing_employees_v01/1";
+  static String contractors = "/get_contractor_for_debit_v01/1/1";
+  static String labours = "/trade_v01";
+  static String location = "/get_locations_v01/1/1";
 }

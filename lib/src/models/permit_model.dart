@@ -13,6 +13,15 @@ class PermitModel {
           .map((x) => PermitData.fromJson(x))),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'success': success,
+      'permitData': {
+        'results': permitData.map((x) => x.toJson()).toList(),
+      },
+    };
+  }
 }
 
 class PermitData {
@@ -176,6 +185,60 @@ class PermitData {
               []),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'client_id': clientId,
+      'project_id': projectId,
+      'created_by': createdBy,
+      'permit_id': permitId,
+      'permit_name': permitName,
+      'permit_type': permitType,
+      'description': description,
+      'location_id': locationId,
+      'sub_location_id': subLocationId,
+      'sub_sub_location_id': subSubLocationId,
+      'activity_head_id': activityHeadId,
+      'activity_id': activityId,
+      'permit_date': permitDate,
+      'start_time': startTime,
+      'end_time': endTime,
+      'trigger_by': triggerBy,
+      'status': status,
+      'contractor_id': contractorId,
+      'offline_random_id': offlineRandomId,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
+      'lat': lat,
+      'lng': lng,
+      'sync_id': syncId,
+      'sync_at': syncAt,
+      'updated_by': updatedBy,
+      'is_archived': isArchived,
+      'is_approver': isApprover,
+      'is_editor': isEditor,
+      'trigger_first_name': triggerFirstName,
+      'trigger_last_name': triggerLastName,
+      'trigger_user_designation': triggerUserDesignation,
+      'trigger_user_company_name': triggerUserCompanyName,
+      'activity_head': activityHead,
+      'trigger_name': triggerName,
+      'activity': activity,
+      'activity_order': activityOrder,
+      'location_name': locationName,
+      'sub_location_name': subLocationName,
+      'contractor_name': contractorName,
+      'sub_sub_location_name': subSubLocationName,
+      'permitTriggerSectionInfo':
+          permitTriggerSectionInfo.map((x) => x.toJson()).toList(),
+      'permitUserRoleInfo': permitUserRoleInfo.map((x) => x.toJson()).toList(),
+      'permitTriggerLabours':
+          permitTriggerLabours.map((x) => x.toJson()).toList(),
+      'permitApproverStatus':
+          permitApproverStatus.map((x) => x.toJson()).toList(),
+    };
+  }
 }
 
 class PermitTriggerSectionInfo {
@@ -228,6 +291,25 @@ class PermitTriggerSectionInfo {
                   ?.map((x) => PermitTriggerSectionLinkInfo.fromJson(x)) ??
               []),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'client_id': clientId,
+      'project_id': projectId,
+      'permit_trigger_id': permitTriggerId,
+      'section_name': sectionName,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
+      'sync_id': syncId,
+      'sync_at': syncAt,
+      'created_by': createdBy,
+      'updated_by': updatedBy,
+      'is_archived': isArchived,
+      'permitTriggerSectionLinkInfo':
+          permitTriggerSectionLinkInfo.map((x) => x.toJson()).toList(),
+    };
   }
 }
 
@@ -313,6 +395,35 @@ class PermitTriggerSectionLinkInfo {
           List<dynamic>.from(json['permitTriggerApproverComment'] ?? []),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'permit_trigger_id': permitTriggerId,
+      'permit_trigger_section_id': permitTriggerSectionId,
+      'question': question,
+      'line_comment': lineComment,
+      'image': image,
+      'hide_check': hideCheck,
+      'question_manually': questionManually,
+      'line_comment_manually': lineCommentManually,
+      'image_manually': imageManually,
+      'remark': remark,
+      'approver_item_remark': approverItemRemark,
+      'hide_check_manually': hideCheckManually,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
+      'sync_id': syncId,
+      'sync_at': syncAt,
+      'created_by': createdBy,
+      'updated_by': updatedBy,
+      'is_archived': isArchived,
+      's3_sync_status': s3SyncStatus,
+      's3_key': s3Key,
+      'file_id': fileId,
+      'permitTriggerApproverComment': permitTriggerApproverComment,
+    };
+  }
 }
 
 class PermitUserRoleInfo {
@@ -369,8 +480,27 @@ class PermitUserRoleInfo {
       userCompanyName: json['user_company_name']?.toString() ?? '',
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'permit_trigger_id': permitTriggerId,
+      'user_id': userId,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
+      'sync_id': syncId,
+      'sync_at': syncAt,
+      'created_by': createdBy,
+      'updated_by': updatedBy,
+      'is_archived': isArchived,
+      'permit_users_name': permitUsersName,
+      'first_name': firstName,
+      'last_name': lastName,
+      'user_designation': userDesignation,
+      'user_company_name': userCompanyName,
+    };
+  }
 }
-// [Previous code remains the same until PermitTriggerLabour class]
 
 class PermitTriggerLabour {
   final int id;
@@ -422,6 +552,25 @@ class PermitTriggerLabour {
       updatedBy: json['updated_by'],
       isArchived: json['is_archived'] ?? 0,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'client_id': clientId,
+      'project_id': projectId,
+      'permit_trigger_id': permitTriggerId,
+      'labour_count': labourCount,
+      'pwr_type': pwrType,
+      'trade': trade,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
+      'sync_id': syncId,
+      'sync_at': syncAt,
+      'created_by': createdBy,
+      'updated_by': updatedBy,
+      'is_archived': isArchived,
+    };
   }
 }
 
@@ -496,5 +645,31 @@ class PermitApproverStatus {
       userDesignation: json['user_designation']?.toString() ?? '',
       userCompanyName: json['user_company_name']?.toString() ?? '',
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'permit_id': permitId,
+      'permit_trigger_id': permitTriggerId,
+      'approve_id': approveId,
+      'status': status,
+      'approved_date': approvedDate,
+      'approved_remark': approvedRemark,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
+      'lat': lat,
+      'lng': lng,
+      'sync_id': syncId,
+      'sync_at': syncAt,
+      'created_by': createdBy,
+      'updated_by': updatedBy,
+      'is_archived': isArchived,
+      'permit_users_name': permitUsersName,
+      'first_name': firstName,
+      'last_name': lastName,
+      'user_designation': userDesignation,
+      'user_company_name': userCompanyName,
+    };
   }
 }

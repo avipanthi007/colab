@@ -81,7 +81,7 @@ class ApiBaseClientService {
         if (statusCode == 400) {
           throw BadRequestException(
               message: errorMessage,
-              data: data); // Ensure detailed message is passed
+              data: data); 
         } else if (statusCode == 401) {
           throw UnauthorizedException(message: 'Unauthorized', data: data);
         } else if (statusCode == 503) {
@@ -100,7 +100,6 @@ class ApiBaseClientService {
             data: error.message);
 
       case DioExceptionType.unknown:
-        // Check if the error is an ApiException and extract the message
         print(error.error);
         if (error.error is ApiExceptions) {
           final apiException = error.error as ApiExceptions;
@@ -109,8 +108,6 @@ class ApiBaseClientService {
             data: apiException.data,
           );
         }
-
-        // Handle other unknown errors
         throw UnknownException(
           message: error.error?.toString() ?? 'Unknown error',
           data: error.message,

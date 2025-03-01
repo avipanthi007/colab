@@ -1,9 +1,9 @@
 import 'package:colab/core/theme/colors.dart';
+import 'package:colab/core/utils/helper.dart';
 import 'package:colab/src/controllers/permits_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
-import 'package:intl/intl.dart';
 
 class ExpiredPermits extends StatefulWidget {
   const ExpiredPermits({super.key});
@@ -15,53 +15,7 @@ class ExpiredPermits extends StatefulWidget {
 class _ExpiredPermitsState extends State<ExpiredPermits> {
   final permitController = Get.find<PermitsController>();
 
-  String formatDate(String? dateStr) {
-    if (dateStr == null) return '';
-    try {
-      final date = DateTime.parse(dateStr);
-      return DateFormat('dd MMMM yyyy')
-          .format(date); // e.g., "15 February 2025"
-    } catch (e) {
-      return dateStr;
-    }
-  }
-
-  String formatTime(String? timeStr) {
-    if (timeStr == null) return '';
-    try {
-      // Handle different time formats
-      DateTime dateTime;
-      if (timeStr.contains('T')) {
-        dateTime = DateTime.parse(timeStr);
-      } else {
-        // Assuming time is in HH:mm:ss format
-        final parts = timeStr.split(':');
-        final now = DateTime.now();
-        dateTime = DateTime(
-          now.year,
-          now.month,
-          now.day,
-          int.parse(parts[0]),
-          int.parse(parts[1]),
-        );
-      }
-      return DateFormat('hh:mm a').format(dateTime); // e.g., "04:50 PM"
-    } catch (e) {
-      return timeStr;
-    }
-  }
-
-  String formatFullDateTime(String? dateTimeStr) {
-    if (dateTimeStr == null) return '';
-    try {
-      final dateTime = DateTime.parse(dateTimeStr);
-      final date = DateFormat('dd MMMM yyyy').format(dateTime);
-      final time = DateFormat('hh:mm a').format(dateTime);
-      return '$date\n$time';
-    } catch (e) {
-      return dateTimeStr;
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {

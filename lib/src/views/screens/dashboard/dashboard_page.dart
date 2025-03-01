@@ -2,9 +2,7 @@ import 'package:colab/core/theme/colors.dart';
 import 'package:colab/core/utils/constants/imageConstant.dart';
 import 'package:colab/core/utils/constants/text_constant.dart';
 import 'package:colab/core/utils/helper.dart';
-import 'package:colab/main.dart';
 import 'package:colab/services/routing/route_path.dart';
-import 'package:colab/src/views/screens/dashboard/my_tools.dart';
 import 'package:colab/src/views/widgets/custom_small_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -159,21 +157,43 @@ class _DashboardPageState extends State<DashboardPage>
                     curve: Curves.easeInOut,
                     height: toolShow.value ? 128.h : 16.h,
                     width: MediaQuery.of(context).size.width,
-                    child: SizeTransition(
-                      sizeFactor: _animation,
-                      axisAlignment: -1.0,
-                      child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 50),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return FadeTransition(
-                            opacity: animation,
-                            child: child,
-                          );
-                        },
-                        child: toolShow.value
-                            ? myToolGrid(context)
-                            : myToolListView(context),
+                    child: ClipRect(
+                      child: Stack(
+                        children: [
+                          AnimatedSlide(
+                            offset: toolShow.value
+                                ? Offset.zero
+                                : const Offset(0, -0.2),
+                            duration: const Duration(milliseconds: 600),
+                            curve: Curves.easeInOut,
+                            child: AnimatedOpacity(
+                              opacity: toolShow.value ? 1.0 : 0.0,
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.easeInOut,
+                              child: IgnorePointer(
+                                ignoring: !toolShow.value,
+                                child: myToolGrid(context),
+                              ),
+                            ),
+                          ),
+
+                          AnimatedSlide(
+                            offset: toolShow.value
+                                ? const Offset(0, 0.2)
+                                : Offset.zero,
+                            duration: const Duration(milliseconds: 600),
+                            curve: Curves.easeInOut,
+                            child: AnimatedOpacity(
+                              opacity: toolShow.value ? 0.0 : 1.0,
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.easeInOut,
+                              child: IgnorePointer(
+                                ignoring: toolShow.value,
+                                child: myToolListView(context),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

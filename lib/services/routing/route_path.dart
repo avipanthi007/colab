@@ -18,4 +18,6 @@ class RoutePath {
   static String futurePermits = "/futurePermits";
   static String createPermit = "/createPermit";
   static String createPermitDetails = "/createPermitDetails";
+
+  static String dynamicListUpdate= "/dynamicListUpdate";
 }
