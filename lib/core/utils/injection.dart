@@ -8,7 +8,6 @@ class DependencyInjector {
   static void inject() {
     final dio = Dio(BaseOptions(baseUrl: ApiConstants.baseUrl));
     Get.lazyPut<Dio>(() => dio);
-
     Get.lazyPut(() => AuthController());
     Get.lazyPut(() => PermitsController());
   }

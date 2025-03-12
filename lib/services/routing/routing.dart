@@ -3,10 +3,10 @@ import 'package:colab/src/models/permit_model.dart';
 import 'package:colab/src/views/screens/authentication/login_page.dart';
 import 'package:colab/src/views/screens/authentication/splash_screen.dart';
 import 'package:colab/src/views/screens/bottom_bar.dart';
-import 'package:colab/src/views/screens/dashboard/permits/create_permit.dart';
-import 'package:colab/src/views/screens/dashboard/permits/create_permit_details.dart';
-import 'package:colab/src/views/screens/dashboard/permits/dynamic_list_update.dart';
-import 'package:colab/src/views/screens/dashboard/permits/future.dart';
+import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/create_permit.dart';
+import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/create_permit_details.dart';
+import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/dynamic_list_update.dart';
+import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/future.dart';
 import 'package:colab/src/views/screens/dashboard/permits/permits_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -53,18 +53,17 @@ class AppRouting {
               return const CreatePermit();
             }),
         GoRoute(
-         
             path: RoutePath.createPermitDetails,
             builder: (context, state) {
-               final permitData = state.extra as PermitData;
-              return  CreatePermitDetails(data: permitData,);
+              final permitData = state.extra as PermitData;
+              return CreatePermitDetails(
+                data: permitData,
+              );
             }),
-             GoRoute(
-         
+        GoRoute(
             path: RoutePath.dynamicListUpdate,
             builder: (context, state) {
-             
-              return  DynamicListUpdate();
+              return DynamicListUpdate();
             }),
       ]);
 }

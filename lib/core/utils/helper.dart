@@ -41,7 +41,7 @@ PopupMenuItem<dynamic> repeatedPopup(
     try {
       final date = DateTime.parse(dateStr);
       return DateFormat('dd MMMM yyyy')
-          .format(date); // e.g., "15 February 2025"
+          .format(date); 
     } catch (e) {
       return dateStr;
     }
@@ -50,12 +50,10 @@ PopupMenuItem<dynamic> repeatedPopup(
   String formatTime(String? timeStr) {
     if (timeStr == null) return '';
     try {
-      // Handle different time formats
       DateTime dateTime;
       if (timeStr.contains('T')) {
         dateTime = DateTime.parse(timeStr);
       } else {
-        // Assuming time is in HH:mm:ss format
         final parts = timeStr.split(':');
         final now = DateTime.now();
         dateTime = DateTime(

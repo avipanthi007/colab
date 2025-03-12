@@ -79,9 +79,7 @@ class ApiBaseClientService {
             data is Map<String, dynamic> ? data['error'] : 'An error occurred';
 
         if (statusCode == 400) {
-          throw BadRequestException(
-              message: errorMessage,
-              data: data); 
+          throw BadRequestException(message: errorMessage, data: data);
         } else if (statusCode == 401) {
           throw UnauthorizedException(message: 'Unauthorized', data: data);
         } else if (statusCode == 503) {

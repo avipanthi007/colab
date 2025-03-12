@@ -15,8 +15,6 @@ class ExpiredPermits extends StatefulWidget {
 class _ExpiredPermitsState extends State<ExpiredPermits> {
   final permitController = Get.find<PermitsController>();
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -174,5 +172,4 @@ class _ExpiredPermitsState extends State<ExpiredPermits> {
       ),
     );
   }
-
 }

@@ -4,7 +4,6 @@ import 'package:colab/services/api_services/base_class_services.dart';
 import 'package:colab/services/routing/route_path.dart';
 import 'package:colab/services/routing/routing.dart';
 import 'package:colab/src/models/login_model.dart';
-import 'package:colab/src/views/screens/authentication/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -13,8 +12,8 @@ class AuthController extends GetxController {
   late AuthServices authServices;
 
   AuthController() {
-    final _apiBaseClientService = ApiBaseClientService();
-    authServices = AuthServices(_apiBaseClientService);
+    final apiBaseClientService = ApiBaseClientService();
+    authServices = AuthServices(apiBaseClientService);
   }
   RxBool isLoading = false.obs;
   Rx<LoginModel?> userData = Rx<LoginModel?>(null);
@@ -35,11 +34,12 @@ class AuthController extends GetxController {
         (data) async {
           userData.value = data;
           await LocalStorage.setToken("token", userData.value!.token);
+          await LocalStorage.setUserId("userId", userData.value!.data.clientId);
           if (userData.value != null) {
             navigatorKey.currentContext!.go(RoutePath.bottomBar);
           }
 
-          debugPrint('Fetch success user data: ${userData}');
+          debugPrint('Fetch success user data: $userData');
           isLoading.value = false;
         },
       );

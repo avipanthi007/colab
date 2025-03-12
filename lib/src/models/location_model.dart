@@ -1,7 +1,10 @@
+import 'sub_location_model.dart';
+
 class LocationModel {
   final int locationId;
   final String locationName;
   final bool isManualPresent;
+  List<SubLocation> subLocations = [];
 
   LocationModel({
     required this.locationId,
@@ -22,6 +25,7 @@ class LocationModel {
       'location_id': locationId,
       'location_name': locationName,
       'is_manual_present': isManualPresent ? 1 : 0,
+      'subLocation': subLocations.map((data) => data.toJson()),
     };
   }
 }

@@ -1,4 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class PermitModel {
   final bool success;
@@ -33,14 +37,14 @@ class PermitData {
   final String? permitName;
   final String? permitType;
   final String? description;
-  final int? locationId;
-  final int? subLocationId;
-  final int? subSubLocationId;
-  final int? activityHeadId;
-  final int? activityId;
-  final String? permitDate;
-  final String? startTime;
-  final String? endTime;
+  int? locationId;
+  int? subLocationId;
+  int? subSubLocationId;
+  int? activityHeadId;
+  int? activityId;
+  String? permitDate;
+  String? startTime;
+  String? endTime;
   final int triggerBy;
   final int status;
   final int contractorId;
@@ -321,9 +325,9 @@ class PermitTriggerSectionLinkInfo {
   final int lineComment;
   final int image;
   final int hideCheck;
-  final String questionManually;
+  String questionManually;
   final String lineCommentManually;
-  final String? imageManually;
+  String? imageManually;
   final String remark;
   final String? approverItemRemark;
   final String hideCheckManually;
@@ -338,6 +342,8 @@ class PermitTriggerSectionLinkInfo {
   final String? s3Key;
   final String? fileId;
   final List<dynamic> permitTriggerApproverComment;
+  final userInput = TextEditingController();
+  final Rx<File?> imgUploaded = Rx<File?>(null);
 
   PermitTriggerSectionLinkInfo({
     required this.id,
@@ -517,6 +523,8 @@ class PermitTriggerLabour {
   final int? createdBy;
   final int? updatedBy;
   final int isArchived;
+  final labourInput = TextEditingController();
+  String? labourCounts;
 
   PermitTriggerLabour({
     required this.id,

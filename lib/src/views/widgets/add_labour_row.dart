@@ -1,6 +1,6 @@
 import 'package:colab/core/theme/colors.dart';
 import 'package:colab/src/controllers/permits_controller.dart';
-import 'package:colab/src/views/screens/dashboard/permits/create_permit_details.dart';
+import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/create_permit_details.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';

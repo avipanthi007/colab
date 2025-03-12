@@ -19,11 +19,9 @@ class _HomeBottomNavigationbarState extends State<HomeBottomNavigationbar> {
   @override
   void initState() {
     super.initState();
-    permitController.fetchPermitData();
-    permitController.approversData();
-    permitController.contractorsData();
-    permitController.laboursData();
-    permitController.getLocation();
+    WidgetsBinding.instance.addPostFrameCallback((time) async {
+      await getData();
+    });
   }
 
   final permitController = Get.find<PermitsController>();
@@ -93,5 +91,18 @@ class _HomeBottomNavigationbarState extends State<HomeBottomNavigationbar> {
           : Icon(icon, color: Colors.grey),
       label: '',
     );
+  }
+
+  getData() async {
+    await permitController.fetchPermitData(); // not needed
+    await permitController.approversData(); //
+    await permitController.contractorsData();
+    await permitController.laboursData();
+    await permitController.getSubSubLocation();
+    await permitController.getSubLocation();
+    await permitController.getLocation();
+    await permitController.getPermitsCounts();
+    await permitController.getlinkingActivity();
+    await permitController.getActivityHead();
   }
 }

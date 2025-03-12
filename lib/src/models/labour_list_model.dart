@@ -24,7 +24,7 @@ class Trade {
       id: json['id'] ?? 0,
       trade: json['trade'] ?? '',
       status: json['status'] ?? 0,
-      createdBy: json['created_by'], // Now nullable
+      createdBy: json['created_by'], 
       updatedBy: json['updated_by'],
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])

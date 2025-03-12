@@ -14,7 +14,7 @@ class CustomButton extends StatelessWidget {
   double borderRadius;
   CustomButton({
     required this.ontap,
-    this.textColor = AppColors.white,
+    this.textColor = AppColors.black,
     this.backGroundColor = AppColors.primaryYellow,
     this.horizontal = 12,
     this.height = 6,
@@ -39,8 +39,10 @@ class CustomButton extends StatelessWidget {
         child: Center(
             child: Text(
           titleText,
-          style:
-              Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 16.sp),
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium!
+              .copyWith(fontSize: 16.sp, color: textColor),
         )),
       ),
     );

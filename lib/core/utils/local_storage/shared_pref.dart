@@ -20,4 +20,14 @@ class LocalStorage {
  static removeToken(String key) async {
     await pref.remove(key);
   }
+   static setUserId(String key, int value) async {
+    await pref.setInt(key, value);
+  }
+ 
+ static getUserId(String key) async {
+    return await pref.getInt(key);
+  }
+ static removeUserId(String key) async {
+    await pref.remove(key);
+  }
 }

@@ -1,11 +1,13 @@
 import 'package:colab/core/theme/colors.dart';
 import 'package:colab/services/routing/route_path.dart';
+import 'package:colab/src/controllers/permits_controller.dart';
 import 'package:colab/src/views/screens/dashboard/my_task.dart';
 import 'package:colab/src/views/screens/dashboard/my_tools.dart';
-import 'package:colab/src/views/screens/dashboard/permits/expired.dart';
-import 'package:colab/src/views/screens/dashboard/permits/future.dart';
+import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/expired.dart';
+import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/future.dart';
 import 'package:colab/src/views/screens/dashboard/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 
@@ -17,6 +19,7 @@ class PermitsTab extends StatefulWidget {
 }
 
 class _PermitsTabState extends State<PermitsTab> with TickerProviderStateMixin {
+  final permitController = Get.find<PermitsController>();
   late TabController _tabController;
   @override
   void initState() {
@@ -29,7 +32,7 @@ class _PermitsTabState extends State<PermitsTab> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 16.h,
+        toolbarHeight: 17.h,
         automaticallyImplyLeading: false,
         flexibleSpace: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,31 +80,81 @@ class _PermitsTabState extends State<PermitsTab> with TickerProviderStateMixin {
                         ),
                       ]),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 3.h),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      CircleAvatar(
-                        child: Text("0"),
-                      ),
-                      CircleAvatar(
-                        child: Text("0"),
-                      ),
-                      CircleAvatar(
-                        child: Text("498"),
-                      ),
-                    ],
-                  ),
+                Obx(
+                  () => permitController.permitCounts.isEmpty
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : Padding(
+                          padding: EdgeInsets.only(top: 4.h),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Container(
+                                height: 4.h,
+                                width: 15.w,
+                                decoration: BoxDecoration(
+                                    color: AppColors.primaryBlack,
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: Center(
+                                  child: Text(
+                                    permitController
+                                        .permitCounts.first.futureCount
+                                        .toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                height: 4.h,
+                                width: 15.w,
+                                decoration: BoxDecoration(
+                                    color: AppColors.primaryBlack,
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: Center(
+                                  child: Text(
+                                    permitController
+                                        .permitCounts.first.currentCount
+                                        .toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                height: 4.h,
+                                width: 15.w,
+                                decoration: BoxDecoration(
+                                    color: AppColors.primaryBlack,
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: Center(
+                                  child: Text(
+                                    permitController
+                                        .permitCounts.first.expiredCount
+                                        .toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                 ),
               ],
             ),
           ],
         ),
       ),
-      body: TabBarView(
-          controller: _tabController,
-          children: [FuturePermits(), MyTools(), ExpiredPermits()]),
+      body: TabBarView(controller: _tabController, children: [
+        FuturePermits(),
+        MyTools(),
+        ExpiredPermits(),
+      ]),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primaryBlack,
         onPressed: () {
