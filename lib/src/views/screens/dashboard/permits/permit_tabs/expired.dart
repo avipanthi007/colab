@@ -1,4 +1,5 @@
 import 'package:colab/core/theme/colors.dart';
+import 'package:colab/core/utils/constants/text_constant.dart';
 import 'package:colab/core/utils/helper.dart';
 import 'package:colab/src/controllers/permits_controller.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,7 @@ class _ExpiredPermitsState extends State<ExpiredPermits> {
                                   topLeft: Radius.circular(12),
                                   bottomRight: Radius.circular(12))),
                           child: Text(
-                            data.permitName?.toString() ?? "user",
+                            data.permitName?.toString() ?? TextConstant.user,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!
@@ -86,13 +87,13 @@ class _ExpiredPermitsState extends State<ExpiredPermits> {
                             children: [
                               kRepeatedColumn(context,
                                   title: formatDate(data.permitDate?.value),
-                                  subtitle: "Permit Date"),
+                                  subtitle: TextConstant.permitDate),
                               kRepeatedColumn(context,
                                   title: formatTime(data.startTime),
-                                  subtitle: "Permit From"),
+                                  subtitle: TextConstant.permitFrom),
                               kRepeatedColumn(context,
                                   title: formatTime(data.endTime),
-                                  subtitle: "Permit To"),
+                                  subtitle: TextConstant.permitTo),
                             ],
                           ),
                           SizedBox(height: 1.h),
@@ -104,11 +105,11 @@ class _ExpiredPermitsState extends State<ExpiredPermits> {
                                   width: 40,
                                   title:
                                       "${data.triggerFirstName} ${data.triggerLastName}(${data.triggerUserDesignation})",
-                                  subtitle: "Requested By"),
+                                  subtitle: TextConstant.requestedBy),
                               kRepeatedColumn(context,
                                   width: 40,
                                   title: formatFullDateTime(data.syncAt),
-                                  subtitle: "Triggered At"),
+                                  subtitle: TextConstant.triggeredAt),
                             ],
                           ),
                           SizedBox(height: 1.h),
@@ -122,7 +123,7 @@ class _ExpiredPermitsState extends State<ExpiredPermits> {
                                     borderRadius: BorderRadius.circular(15),
                                     color: AppColors.primaryYellow),
                                 child: Text(
-                                  "Pending",
+                                  TextConstant.pending,
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
@@ -135,7 +136,7 @@ class _ExpiredPermitsState extends State<ExpiredPermits> {
                               kRepeatedColumn(context,
                                   width: 50,
                                   title: "${data.contractorName}",
-                                  subtitle: "Contractor"),
+                                  subtitle: TextConstant.contractor),
                             ],
                           )
                         ],

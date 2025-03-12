@@ -1,3 +1,4 @@
+import 'package:colab/core/utils/constants/text_constant.dart';
 import 'package:colab/src/controllers/permits_controller.dart';
 import 'package:colab/src/views/widgets/create_permit_ui_widget.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class _CreatePermitState extends State<CreatePermit> {
               },
               icon: Icon(Icons.arrow_back_ios)),
           title: Text(
-            "Create Permit",
+            TextConstant.createPermit,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:colab/core/theme/colors.dart';
+import 'package:colab/core/utils/constants/text_constant.dart';
 import 'package:colab/services/routing/route_path.dart';
 import 'package:colab/src/models/permit_model.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -29,7 +30,7 @@ class CreatePermitUiWidget extends StatelessWidget {
                     topLeft: Radius.circular(12),
                     topRight: Radius.circular(12))),
             child: Text(
-              data.permitName.toString() ?? "Permit Name",
+              data.permitName.toString() ?? TextConstant.permitName,
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
@@ -41,7 +42,7 @@ class CreatePermitUiWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Description",
+                Text(TextConstant.description,
                     style: Theme.of(context).textTheme.bodyMedium),
                 SizedBox(
                   height: 1.5.h,
@@ -58,7 +59,7 @@ class CreatePermitUiWidget extends StatelessWidget {
                       width: 100.w,
                       height: 6.h,
                       child: Text(
-                        data.description.toString() ?? "Description",
+                        data.description.toString() ?? TextConstant.description,
                         style: Theme.of(context).textTheme.labelMedium,
                       ),
                     )),
@@ -78,7 +79,7 @@ class CreatePermitUiWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(25)),
                       child: Center(
                         child: Text(
-                          "Add Permit",
+                          TextConstant.addPermit,
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium!

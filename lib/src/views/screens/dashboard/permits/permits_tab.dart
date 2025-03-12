@@ -1,11 +1,10 @@
 import 'package:colab/core/theme/colors.dart';
+import 'package:colab/core/utils/constants/text_constant.dart';
 import 'package:colab/services/routing/route_path.dart';
 import 'package:colab/src/controllers/permits_controller.dart';
-import 'package:colab/src/views/screens/dashboard/my_task.dart';
 import 'package:colab/src/views/screens/dashboard/my_tools.dart';
 import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/expired.dart';
 import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/future.dart';
-import 'package:colab/src/views/screens/dashboard/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -48,7 +47,7 @@ class _PermitsTabState extends State<PermitsTab> with TickerProviderStateMixin {
                     },
                     icon: Icon(Icons.arrow_back_ios_new)),
                 Text(
-                  "Permits",
+                  TextConstant.permits,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
@@ -70,13 +69,13 @@ class _PermitsTabState extends State<PermitsTab> with TickerProviderStateMixin {
                       controller: _tabController,
                       tabs: [
                         Tab(
-                          text: "Future",
+                          text: TextConstant.future,
                         ),
                         Tab(
-                          text: "Current",
+                          text: TextConstant.current,
                         ),
                         Tab(
-                          text: "Expired",
+                          text: TextConstant.expired,
                         ),
                       ]),
                 ),
