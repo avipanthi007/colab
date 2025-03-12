@@ -2,7 +2,6 @@ import 'package:colab/core/utils/constants/api_constant.dart';
 import 'package:colab/services/api_services/base_class_services.dart';
 import 'package:colab/src/models/login_model.dart';
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class AuthServices {

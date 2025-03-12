@@ -106,7 +106,7 @@ class LinkingActivity {
       'activity': activity,
       'activity_head_order': activityHeadOrder,
       'quantity': quantity,
-      'productivity': productivity, // Keep it nullable
+      'productivity': productivity, 
       'activity_head': activityHead,
       'activity_id': activityId,
       'revision_code': revisionCode,
@@ -115,7 +115,7 @@ class LinkingActivity {
       'contractor_name': contractorName,
       'uom_name': uomName,
       'cont_id': contId,
-      'id': id, // Keep it nullable
+      'id': id, 
       'location_id': locationId,
       'sub_loc_id': subLocId,
       'sub_location_id': subLocationId,

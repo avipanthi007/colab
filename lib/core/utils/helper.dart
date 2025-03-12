@@ -1,4 +1,8 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:colab/core/theme/colors.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +68,7 @@ PopupMenuItem<dynamic> repeatedPopup(
           int.parse(parts[1]),
         );
       }
-      return DateFormat('hh:mm a').format(dateTime); // e.g., "04:50 PM"
+      return DateFormat('hh:mm a').format(dateTime); 
     } catch (e) {
       return timeStr;
     }
@@ -80,4 +84,56 @@ PopupMenuItem<dynamic> repeatedPopup(
     } catch (e) {
       return dateTimeStr;
     }
+    
+  }
+
+   final ImagePicker _picker = ImagePicker();
+
+  Future<File?> pickImageFromGallery() async {
+    try {
+      final XFile? selectedXFile =
+          await _picker.pickImage(source: ImageSource.gallery);
+
+      if (selectedXFile != null) {
+        if (isValidImageFormat(selectedXFile.path)) {
+          final file = File(selectedXFile.path);
+          return file;
+        } else {
+          errorLog("Invalid image format. Only jpg, jpeg, or png are allowed.");
+        }
+      }
+      return null;
+    } catch (e) {
+      log("Error picking image: $e");
+      return null;
+    }
+  }
+
+  Future<File?> captureImageWithCamera() async {
+    try {
+      final XFile? capturedImage =
+          await _picker.pickImage(source: ImageSource.camera);
+      if (capturedImage != null) {
+        if (isValidImageFormat(capturedImage.path)) {
+          return File(capturedImage.path);
+        } else {
+          errorLog("Invalid image format. Only jpg, jpeg, or png are allowed.");
+        }
+      }
+    } catch (e) {
+      errorLog("Error capturing image: $e");
+    }
+    return null;
+  }
+
+  bool isValidImageFormat(String path) {
+    final allowedExtensions = ['jpg', 'jpeg', 'png'];
+    final extension = path.split('.').last.toLowerCase();
+    final isValid = allowedExtensions.contains(extension);
+
+    log("File path: $path");
+    log("Extracted extension: $extension");
+    log("Is valid format: $isValid");
+
+    return isValid;
   }

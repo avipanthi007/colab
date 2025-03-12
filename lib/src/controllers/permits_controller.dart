@@ -312,54 +312,5 @@ class PermitsController extends GetxController {
     labourItems[index] = updatedItem;
   }
 
-  final ImagePicker _picker = ImagePicker();
-
-  Future<File?> pickImageFromGallery() async {
-    try {
-      final XFile? selectedXFile =
-          await _picker.pickImage(source: ImageSource.gallery);
-
-      if (selectedXFile != null) {
-        if (isValidImageFormat(selectedXFile.path)) {
-          final file = File(selectedXFile.path);
-          return file;
-        } else {
-          errorLog("Invalid image format. Only jpg, jpeg, or png are allowed.");
-        }
-      }
-      return null;
-    } catch (e) {
-      print("Error picking image: $e");
-      return null;
-    }
-  }
-
-  Future<File?> captureImageWithCamera() async {
-    try {
-      final XFile? capturedImage =
-          await _picker.pickImage(source: ImageSource.camera);
-      if (capturedImage != null) {
-        if (isValidImageFormat(capturedImage.path)) {
-          return File(capturedImage.path);
-        } else {
-          errorLog("Invalid image format. Only jpg, jpeg, or png are allowed.");
-        }
-      }
-    } catch (e) {
-      errorLog("Error capturing image: $e");
-    }
-  }
-
-  bool isValidImageFormat(String path) {
-    final allowedExtensions = ['jpg', 'jpeg', 'png'];
-    final extension = path.split('.').last.toLowerCase();
-    final isValid = allowedExtensions.contains(extension);
-
-    // Add debugging info
-    print("File path: $path");
-    print("Extracted extension: $extension");
-    print("Is valid format: $isValid");
-
-    return isValid;
-  }
+ 
 }

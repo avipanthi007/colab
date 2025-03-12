@@ -1,23 +1,17 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:colab/core/theme/colors.dart';
-import 'package:colab/core/utils/constants/api_constant.dart';
 import 'package:colab/core/utils/constants/imageConstant.dart';
-import 'package:colab/core/utils/constants/text_constant.dart';
 import 'package:colab/core/utils/helper.dart';
 import 'package:colab/services/routing/route_path.dart';
-import 'package:colab/services/routing/routing.dart';
 import 'package:colab/src/controllers/permits_controller.dart';
 import 'package:colab/src/models/permit_model.dart';
-import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/permit_post.dart';
-import 'package:colab/src/views/widgets/add_labour_row.dart';
 import 'package:colab/src/views/widgets/custom_button.dart';
+import 'package:colab/src/views/widgets/picked_images.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:sizer/sizer.dart';
 
 class CreatePermitDetails extends StatefulWidget {
@@ -34,136 +28,6 @@ class _CreatePermitDetailsState extends State<CreatePermitDetails> {
 
   final dobController = TextEditingController().obs;
   RxBool switchValue = false.obs;
-  Future<File?> showImagePickerOptions(
-    BuildContext context, {
-    required Function(String?) onPick,
-  }) async {
-    File? file;
-    await showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-      ),
-      builder: (BuildContext context) {
-        return Container(
-          height: 18.h,
-          width: 100.w,
-          margin: const EdgeInsets.only(top: 30),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.w),
-                child: Text("Upload Images",
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontSize: 18.sp, fontWeight: FontWeight.bold)),
-              ),
-              SizedBox(
-                height: 1.h,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () async {
-                      Navigator.of(context).pop();
-                      try {
-                        file = await permitController.captureImageWithCamera();
-                      } catch (e) {
-                        print("Error capturing image: $e");
-                      }
-                    },
-                    child: Container(
-                      height: 11.h,
-                      width: 40.w,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 2.w, vertical: 0.6.h),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: AppColors.white),
-                      child: Column(
-                        children: [
-                          Container(
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: AppColors.black),
-                              child: Icon(
-                                Icons.camera_alt,
-                                color: AppColors.white,
-                                size: 20.sp,
-                              )),
-                          SizedBox(
-                            height: 1.h,
-                          ),
-                          Text("Take Picture",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.normal))
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 6.w,
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      Navigator.of(context).pop();
-                      try {
-                        file = await permitController.pickImageFromGallery();
-                        if (file != null) {
-                          infoLog("Selected file path: ${file!.path}");
-                          onPick(file!.path);
-                        }
-                      } catch (e) {
-                        print("Error picking image: $e");
-                      }
-                    },
-                    child: Container(
-                      height: 11.h,
-                      width: 40.w,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 2.w, vertical: 0.6.h),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: AppColors.white),
-                      child: Column(
-                        children: [
-                          Container(
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: AppColors.black),
-                              child: Icon(Icons.photo, color: AppColors.white)),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "From Gallery",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.normal),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -225,19 +89,23 @@ class _CreatePermitDetailsState extends State<CreatePermitDetails> {
                     ],
                   ),
                 ),
-                kRepeatedPermitDataColumn(context,
-                    header: "Permit Date",
-                    rowTitle: formatDate(widget.data.permitDate.toString()),
-                    icon: Icons.calendar_month, iconTap: () async {
-                  await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime(2500))
-                      .then((value) => dobController.value.text =
-                          formatDate(value.toString()));
-                  widget.data.permitDate = dobController.value.text;
-                }),
+                Obx(
+                  () => kRepeatedPermitDataColumn(context,
+                      header: "Permit Date",
+                      rowTitle: formatDate(
+                              widget.data.permitDate?.value.toString()) ??
+                          dobController.value.text,
+                      icon: Icons.calendar_month, iconTap: () async {
+                    await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime(2500))
+                        .then((value) => dobController.value.text =
+                            formatDate(value.toString()));
+                    widget.data.permitDate?.value = dobController.value.text;
+                  }),
+                ),
                 Obx(
                   () => kRepeatedPermitDataColumn(context,
                       header: "Permit From",
@@ -463,7 +331,14 @@ class _CreatePermitDetailsState extends State<CreatePermitDetails> {
                                                                             .laboursList[listIndex]
                                                                             .trade);
 
-                                                                            widget.data.permitTriggerLabours[index].labourCounts = permitController.laboursList[listIndex].trade;  
+                                                                    widget
+                                                                            .data
+                                                                            .permitTriggerLabours[
+                                                                                index]
+                                                                            .labourCounts =
+                                                                        permitController
+                                                                            .laboursList[listIndex]
+                                                                            .trade;
                                                                     context
                                                                         .pop();
                                                                   },
@@ -491,7 +366,10 @@ class _CreatePermitDetailsState extends State<CreatePermitDetails> {
                                         borderRadius:
                                             BorderRadius.circular(12)),
                                     child: TextField(
-                                      controller: widget.data.permitTriggerLabours[index].labourInput,
+                                      controller: widget
+                                          .data
+                                          .permitTriggerLabours[index]
+                                          .labourInput,
                                       keyboardType: TextInputType.number,
                                       decoration: InputDecoration(
                                         hintText: "0",
@@ -503,7 +381,7 @@ class _CreatePermitDetailsState extends State<CreatePermitDetails> {
                                         if (value.isNotEmpty) {
                                           permitController.updateLabourQuantity(
                                               index, int.parse(value));
-                                              //widget.data.permitTriggerLabours[index].labourCounts = value;  
+                                          //widget.data.permitTriggerLabours[index].labourCounts = value;
                                         }
                                       },
                                     ),
@@ -1135,9 +1013,10 @@ class _CreatePermitDetailsState extends State<CreatePermitDetails> {
                                                 decoration: InputDecoration(
                                                   suffixIcon: IconButton(
                                                       onPressed: () async {
-                                                        await showImagePickerOptions(
-                                                            context,
-                                                            onPick: (imgPath) {
+                                                        await PickedImages
+                                                            .showImagePickerOptions(
+                                                                context, onPick:
+                                                                    (imgPath) {
                                                           itemData.imgUploaded
                                                                   .value =
                                                               File(imgPath ??

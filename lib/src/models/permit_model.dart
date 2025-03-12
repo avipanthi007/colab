@@ -42,7 +42,7 @@ class PermitData {
   int? subSubLocationId;
   int? activityHeadId;
   int? activityId;
-  String? permitDate;
+  RxString? permitDate;
   String? startTime;
   String? endTime;
   final int triggerBy;
@@ -140,7 +140,7 @@ class PermitData {
       subSubLocationId: json['sub_sub_location_id'],
       activityHeadId: json['activity_head_id'],
       activityId: json['activity_id'],
-      permitDate: json['permit_date']?.toString(),
+      permitDate: json['permit_date'] != null ? RxString(json['permit_date'].toString()) : null,
       startTime: json['start_time']?.toString(),
       endTime: json['end_time']?.toString(),
       triggerBy: json['trigger_by'] ?? 0,

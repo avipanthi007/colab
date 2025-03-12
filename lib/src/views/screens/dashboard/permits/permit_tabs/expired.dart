@@ -85,7 +85,7 @@ class _ExpiredPermitsState extends State<ExpiredPermits> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               kRepeatedColumn(context,
-                                  title: formatDate(data.permitDate),
+                                  title: formatDate(data.permitDate?.value),
                                   subtitle: "Permit Date"),
                               kRepeatedColumn(context,
                                   title: formatTime(data.startTime),

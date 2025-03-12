@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:colab/core/utils/constants/api_constant.dart';
 import 'package:colab/core/utils/helper.dart';
 import 'package:colab/services/api_services/base_class_services.dart';
@@ -15,7 +14,6 @@ import 'package:colab/src/models/permit_model.dart';
 import 'package:colab/src/models/sub_location_model.dart';
 import 'package:colab/src/models/sub_sub_location_model.dart';
 import 'package:colab/src/models/trigger_permit.dart';
-import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/create_permit_details.dart';
 import 'package:colab/src/views/widgets/custom_toast.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -387,9 +385,9 @@ class PermitsServices {
           }
         ])
       });
-      infoLog('Request data Location: ${permitList}');
-      log('Request data **: ${permitList}');
-      infoLog('Request data Location: ${labourList}');
+      infoLog('Request data Location: $permitList');
+      log('Request data **: $permitList');
+      infoLog('Request data Location: $labourList');
 
       final response = await _apiBaseClientService.request(
           endpoint: ApiConstants.triggerPermit,
@@ -410,7 +408,7 @@ class PermitsServices {
       }
     } catch (e) {
       debugPrint('Exception details: $e');
-      if (e is DioError && e.response != null) {
+      if (e is DioException && e.response != null) {
         debugPrint('Response data: ${e.response?.data}');
         return Left(
             "API Error: ${e.response?.statusCode} - ${e.response?.data?["message"] ?? e.message}");
