@@ -89,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                     label: TextConstant.password,
                     //borderRadius: BorderRadius.circular(25),
                     suffix: Icon(Icons.remove_red_eye),
-                    obscureText: true,
+                    obscureText:true,
                   ),
                   Row(
                     children: [

@@ -11,6 +11,7 @@ import 'package:colab/src/models/contractor_list_model.dart';
 import 'package:colab/src/models/labour_list_model.dart';
 import 'package:colab/src/models/linking_activity_model.dart';
 import 'package:colab/src/models/location_model.dart';
+import 'package:colab/src/models/permit_config_model.dart';
 import 'package:colab/src/models/permit_count_model.dart';
 import 'package:colab/src/models/permit_model.dart';
 import 'package:colab/src/models/sub_location_model.dart';
@@ -30,7 +31,7 @@ class PermitsController extends GetxController {
   }
 
   final contractorName = "".obs;
-  final locationId = 0.obs;
+  final locationId = "".obs;
   final subLocationId = 0.obs;
   final subsubLocationId = 0.obs;
   final locationName = "".obs;
@@ -41,6 +42,8 @@ class PermitsController extends GetxController {
   final coRequesterName = "".obs;
   final activityId = 0.obs;
   final activityHeadId = 0.obs;
+  final activityName = "".obs;
+  final activityHeadName = "".obs;
   final activityHead = "".obs;
   final linkingActivityId = 0.obs;
   final linkingActivity = "".obs;
@@ -60,6 +63,7 @@ class PermitsController extends GetxController {
   var subsubLocationList = <SubSubLocation>[].obs;
   var activityHeadList = <ActivityHead>[].obs;
   var linkingActivityList = <LinkingActivity>[].obs;
+  var permitConfigList = <PermitConfigData>[].obs;
 
   Future<void> fetchPermitData() async {
     isLoading.value = true;
@@ -217,7 +221,7 @@ class PermitsController extends GetxController {
 
   Future<void> getActivityHead() async {
     isLoading.value = true;
-    print("Fetching activityHeadList Data...");
+    infoLog("Fetching activityHeadList Data...");
     final result = await permitsServices.getActivityHead();
     result.fold(
       (failure) {
@@ -261,9 +265,8 @@ class PermitsController extends GetxController {
   }
 
   Future<void> triggerPermit({
-    required PermitData data,
+    required PermitConfigData data,
   }) async {
-
     isLoading.value = true;
     try {
       final result = await permitsServices.triggerPermit(data: data);
@@ -282,35 +285,26 @@ class PermitsController extends GetxController {
     }
   }
 
-  RxList<LabourItem> labourItems = <LabourItem>[].obs;
-
-  @override
-  void onInit() {
-    super.onInit();
-    labourItems.add(LabourItem(type: '', quantity: 0));
+  Future<void> getPermitConfig() async {
+    isLoading.value = true;
+    print("Fetching getPermitConfig Data...");
+    final result = await permitsServices.getPermitConfig();
+    result.fold(
+      (failure) {
+        isLoading.value = false;
+        errorLog('Fetch failed getPermitConfig: $failure');
+      },
+      (success) {
+        permitConfigList.clear();
+        permitConfigList.addAll(success);
+        infoLog('Fetched getPermitConfig Data: $success');
+        isLoading.value = false;
+      },
+    );
   }
 
-  void addLabourRow() {
-    labourItems.add(LabourItem(type: '', quantity: 0));
-  }
+ 
 
-  void deleteLabourRow(int index) {
-    if (labourItems.length > 1) {
-      labourItems.removeAt(index);
-    }
-  }
-
-  void updateLabourType(int index, String type) {
-    final updatedItem =
-        LabourItem(type: type, quantity: labourItems[index].quantity);
-    labourItems[index] = updatedItem;
-  }
-
-  void updateLabourQuantity(int index, int quantity) {
-    final updatedItem =
-        LabourItem(type: labourItems[index].type, quantity: quantity);
-    labourItems[index] = updatedItem;
-  }
 
  
 }

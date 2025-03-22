@@ -20,4 +20,6 @@ class RoutePath {
   static String createPermitDetails = "/createPermitDetails";
 
   static String dynamicListUpdate= "/dynamicListUpdate";
+    static String permitDetails= "/permitDetails";
+
 }

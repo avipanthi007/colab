@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:colab/core/utils/constants/api_constant.dart';
 import 'package:colab/core/utils/helper.dart';
+import 'package:colab/core/utils/local_storage/shared_pref.dart';
 import 'package:colab/services/api_services/base_class_services.dart';
 import 'package:colab/src/models/activity_head_model.dart';
 import 'package:colab/src/models/approvers_list_model.dart';
@@ -9,6 +10,7 @@ import 'package:colab/src/models/contractor_list_model.dart';
 import 'package:colab/src/models/labour_list_model.dart';
 import 'package:colab/src/models/linking_activity_model.dart';
 import 'package:colab/src/models/location_model.dart';
+import 'package:colab/src/models/permit_config_model.dart';
 import 'package:colab/src/models/permit_count_model.dart';
 import 'package:colab/src/models/permit_model.dart';
 import 'package:colab/src/models/sub_location_model.dart';
@@ -23,10 +25,18 @@ class PermitsServices {
   final ApiBaseClientService _apiBaseClientService;
 
   PermitsServices(this._apiBaseClientService);
+
+  Future getClientId() async {
+    return await LocalStorage.getUserId("userId");
+  }
+
+  int projectId = 1;
   Future<Either<String, List<PermitData>>> fetchPermitData() async {
+    int clientId = await getClientId();
     try {
       final response = await _apiBaseClientService.request(
-        endpoint: ApiConstants.expiredPermits,
+        endpoint:
+            "${ApiConstants.expiredPermits}?client_id=${clientId}&project_id=${projectId}&mainId=35&type_of_date=EXPIRED&status=null&page=1",
         method: 'GET',
       );
 
@@ -53,9 +63,10 @@ class PermitsServices {
   }
 
   Future<Either<String, List<Approvers>>> approversData() async {
+    int clientId = await getClientId();
     try {
       final response = await _apiBaseClientService.request(
-        endpoint: ApiConstants.approvers,
+        endpoint: "${ApiConstants.approvers}/${clientId}",
         method: 'GET',
       );
 
@@ -82,9 +93,10 @@ class PermitsServices {
   }
 
   Future<Either<String, List<ContractorsList>>> contractorsData() async {
+    int clientId = await getClientId();
     try {
       final response = await _apiBaseClientService.request(
-        endpoint: ApiConstants.contractors,
+        endpoint: "${ApiConstants.contractors}/${clientId}/${projectId}",
         method: 'GET',
       );
 
@@ -139,9 +151,10 @@ class PermitsServices {
   }
 
   Future<Either<String, List<LocationModel>>> getLocation() async {
+    int clientId = await getClientId();
     try {
       final response = await _apiBaseClientService.request(
-        endpoint: ApiConstants.location,
+        endpoint: "${ApiConstants.location}/${clientId}/${projectId}",
         method: 'GET',
       );
 
@@ -168,9 +181,11 @@ class PermitsServices {
   }
 
   Future<Either<String, List<PermitCounts>>> getPermitsCounts() async {
+    int clientId = await getClientId();
     try {
       final response = await _apiBaseClientService.request(
-        endpoint: ApiConstants.permitCount,
+        endpoint:
+            "${ApiConstants.permitCount}?client_id=${clientId}&project_id=${projectId}",
         method: 'GET',
       );
 
@@ -197,9 +212,10 @@ class PermitsServices {
   }
 
   Future<Either<String, List<SubLocation>>> getSubLocation() async {
+    int clientId = await getClientId();
     try {
       final response = await _apiBaseClientService.request(
-        endpoint: ApiConstants.subLocation,
+        endpoint: "${ApiConstants.subLocation}/${clientId}/${projectId}",
         method: 'GET',
       );
 
@@ -226,9 +242,10 @@ class PermitsServices {
   }
 
   Future<Either<String, List<SubSubLocation>>> getSubSubLocation() async {
+    int clientId = await getClientId();
     try {
       final response = await _apiBaseClientService.request(
-        endpoint: ApiConstants.subsubLocation,
+        endpoint: "${ApiConstants.subsubLocation}/${clientId}/${projectId}",
         method: 'GET',
       );
 
@@ -255,9 +272,10 @@ class PermitsServices {
   }
 
   Future<Either<String, List<ActivityHead>>> getActivityHead() async {
+    int clientId = await getClientId();
     try {
       final response = await _apiBaseClientService.request(
-        endpoint: ApiConstants.activityHead,
+        endpoint: "${ApiConstants.activityHead}/${clientId}/${projectId}",
         method: 'GET',
       );
 
@@ -284,9 +302,10 @@ class PermitsServices {
   }
 
   Future<Either<String, List<LinkingActivity>>> getlinkingActivity() async {
+    int clientId = await getClientId();
     try {
       final response = await _apiBaseClientService.request(
-        endpoint: ApiConstants.linkingActivity,
+        endpoint: "${ApiConstants.linkingActivity}/${clientId}/${projectId}",
         method: 'GET',
       );
 
@@ -313,26 +332,26 @@ class PermitsServices {
   }
 
   Future<Either<String, TriggerPermit>> triggerPermit(
-      {required PermitData data}) async {
+      {required PermitConfigData data}) async {
     try {
       List<Map<String, dynamic>> permitList = [];
       List<Map<String, dynamic>> labourList = [];
       data.permitTriggerLabours.forEach((element) {
         labourList.add({
-          "labour_count": element.labourInput.text,
-          "trade": element.labourCounts,
+          "labour_count": element.labourInput!.value.text,
+          "trade": element.type.value,
           "pwr_type": element.pwrType
         });
       });
-      data.permitTriggerSectionInfo.forEach((section) {
-        section.permitTriggerSectionLinkInfo.forEach((sectionLink) {
+      data.permitSectionInfo.forEach((section) {
+        section.permitSectionLinkInfo.forEach((sectionLink) {
           permitList.add({
-            'question_manually': sectionLink.userInput.text,
-            'hide_check_manually': sectionLink.hideCheckManually,
+            'question_manually': sectionLink.userInput.text.toString(),
+            'hide_check_manually': sectionLink.hideCheckManually.value,
             "client_id": section.clientId,
             "project_id": section.projectId,
-            "permit_trigger_id": section.permitTriggerId,
-            "permit_trigger_section_id": sectionLink.permitTriggerSectionId,
+            "permit_trigger_id": null,
+            "permit_trigger_section_id": section.id,
             "question": sectionLink.question,
             "line_comment": sectionLink.lineComment,
             "image": 0,
@@ -353,41 +372,40 @@ class PermitsServices {
             "client_id": data.clientId,
             "project_id": data.projectId,
             "created_by": "14",
-            "permit_id": data.permitId,
+            "permit_id": 86,
             "permit_name": data.permitName,
             "permit_type": data.permitType,
             "description": data.description,
-            "location_id": data.locationId,
-            "sub_location_id": data.subLocationId,
-            "sub_sub_location_id": data.subSubLocationId,
-            "activity_head_id": data.activityHeadId,
-            "activity_id": data.activityId,
+            "location_id": data.locationId.value,
+            "sub_location_id": data.subLocationId.value,
+            "sub_sub_location_id": data.subSubLocationId.value,
+            "activity_head_id": data.getActivityHeadId,
+            "activity_id": data.getActivityId,
             "user_permission": [],
-            "permit_date": data.permitDate,
-            "start_time": data.startTime,
-            "end_time": data.endTime,
+            "permit_date": data.getPermitDate.toString(),
+            "start_time": data.getStartTime.toString(),
+            "end_time": data.getEndTime.toString(),
             "trigger_section": [
               {
                 "client_id": data.clientId,
                 "project_id": data.projectId,
-                "permit_trigger_id":
-                    data.permitTriggerSectionInfo.first.permitTriggerId,
-                "section_name": data.permitTriggerSectionInfo.first.sectionName,
+                "permit_trigger_id": null,
+                "section_name": data.permitSectionInfo.first.sectionName,
                 "permitList": permitList
               }
             ],
             "approved_status": "",
-            "trigger_by": data.triggerBy,
+            "trigger_by": "14",
             "approved_by": null,
             "approver": [18],
-            "contractor_id": data.contractorId,
+            "contractor_id": 5,
             "labours": labourList
           }
         ])
       });
       infoLog('Request data Location: $permitList');
       log('Request data **: $permitList');
-      infoLog('Request data Location: $labourList');
+      infoLog('Request data labourList: $labourList');
 
       final response = await _apiBaseClientService.request(
           endpoint: ApiConstants.triggerPermit,
@@ -414,6 +432,36 @@ class PermitsServices {
             "API Error: ${e.response?.statusCode} - ${e.response?.data?["message"] ?? e.message}");
       }
       return Left("Unexpected error: $e");
+    }
+  }
+
+  Future<Either<String, List<PermitConfigData>>> getPermitConfig() async {
+    int clientId = await getClientId();
+    try {
+      final response = await _apiBaseClientService.request(
+        endpoint: "${ApiConstants.triggerConfig}",
+        method: 'GET',
+      );
+
+      debugPrint('Fetch success PermitConfigData: ${response.data}');
+
+      if (response.data != null && response.data['permitData'] != null) {
+        final List<dynamic> results = response.data['permitData'];
+
+        final permitConf =
+            results.map((json) => PermitConfigData.fromJson(json)).toList();
+
+        debugPrint('Fetched PermitConfigData data: $permitConf');
+
+        return Right(permitConf);
+      } else {
+        final errorMessage =
+            response.data?['message'] ?? "Something went wrong!";
+        return Left(errorMessage);
+      }
+    } catch (e, stackTrace) {
+      debugPrint('Error in PermitConfigData: $e\n$stackTrace');
+      return Left("Unexpected error: ${e.toString()}");
     }
   }
 }

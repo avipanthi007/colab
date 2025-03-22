@@ -1,8 +1,9 @@
 import 'package:colab/core/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
-class CustomTextField extends StatefulWidget {
+class CustomTextField extends StatelessWidget {
   final String label;
   final double? width;
   final bool? readOnly;
@@ -21,8 +22,10 @@ class CustomTextField extends StatefulWidget {
   final BorderRadius? borderRadius;
   final EdgeInsetsGeometry? margin;
 
-  const CustomTextField({
-    super.key,
+  final _isObscured = RxBool(true);
+
+  CustomTextField({
+    Key? key,
     required this.label,
     this.width,
     this.controller,
@@ -40,91 +43,81 @@ class CustomTextField extends StatefulWidget {
     this.margin = const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
     this.borderRadius = const BorderRadius.all(Radius.circular(12)),
     this.hintText,
-  });
-
-  @override
-  _CustomTextFieldState createState() => _CustomTextFieldState();
-}
-
-class _CustomTextFieldState extends State<CustomTextField> {
-  late bool _obscureText;
-
-  @override
-  void initState() {
-    super.initState();
-    _obscureText = widget.obscureText ?? false;
+  }) : super(key: key) {
+    _isObscured.value = obscureText ?? false;
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 50,
-      margin: widget.margin,
-      width: widget.width,
-      child: TextFormField(
-        style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 16),
-        obscureText: _obscureText,
-        initialValue: widget.initial,
-        keyboardType: widget.keyboardType,
-        onChanged: widget.onChanged,
-        readOnly: widget.readOnly ?? false,
-        controller: widget.controller,
-        maxLength: widget.maxLength,
-        validator: (val) {
-          if (widget.shouldValidate != false &&
-              (widget.controller?.text.isEmpty ?? true)) {
-            return "Please Input A Valid ${widget.label}";
-          }
-          return null;
-        },
-        inputFormatters: widget.digitsOnly ?? false
-            ? [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*'))]
-            : null,
-        maxLines: widget.maxLines ?? 1,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: AppColors.fieldColor,
-          prefixIcon: widget.prefix,
-          focusedBorder: OutlineInputBorder(
-            borderRadius: widget.borderRadius!,
-            borderSide:
-                const BorderSide(color: AppColors.primaryYellow, width: 2),
-          ),
-          hintText: widget.hintText,
-          counterText: "",
-          suffixIcon: widget.obscureText == true
-              ? IconButton(
-                  icon: Icon(
-                    _obscureText ? Icons.visibility_off : Icons.visibility,
-                    color: Colors.grey,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureText = !_obscureText;
-                    });
-                  },
-                )
-              : widget.suffix,
-          labelText: widget.label,
-          contentPadding: const EdgeInsets.all(12),
-          isDense: true,
-          errorMaxLines: 1,
-          labelStyle: const TextStyle(color: Colors.grey, fontSize: 12),
-          errorStyle: const TextStyle(color: Colors.red, height: 1),
-          disabledBorder: OutlineInputBorder(
-            borderRadius: widget.borderRadius!,
-            borderSide:
-                const BorderSide(color: AppColors.primaryBlue, width: 2),
-          ),
-          errorBorder:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          border: OutlineInputBorder(
-            borderRadius: widget.borderRadius!,
-            borderSide:
-                const BorderSide(color: AppColors.primaryBlue, width: 2),
-          ),
-        ),
-      ),
+      margin: margin,
+      width: width,
+      child: Obx(() => TextFormField(
+            style:
+                Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 16),
+            obscureText: _isObscured.value,
+            initialValue: initial,
+            keyboardType: keyboardType,
+            onChanged: onChanged,
+            readOnly: readOnly ?? false,
+            controller: controller,
+            maxLength: maxLength,
+            validator: (val) {
+              if (shouldValidate != false &&
+                  (controller?.text.isEmpty ?? true)) {
+                return "Please Input A Valid $label";
+              }
+              return null;
+            },
+            inputFormatters: digitsOnly ?? false
+                ? [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*'))]
+                : null,
+            maxLines: maxLines ?? 1,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: AppColors.fieldColor,
+              prefixIcon: prefix,
+              focusedBorder: OutlineInputBorder(
+                borderRadius: borderRadius!,
+                borderSide:
+                    const BorderSide(color: AppColors.primaryYellow, width: 2),
+              ),
+              hintText: hintText,
+              counterText: "",
+              suffixIcon: obscureText == true
+                  ? IconButton(
+                      icon: Icon(
+                        _isObscured.value
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {
+                        _isObscured.value = !_isObscured.value;
+                      },
+                    )
+                  : suffix,
+              labelText: label,
+              contentPadding: const EdgeInsets.all(12),
+              isDense: true,
+              errorMaxLines: 1,
+              labelStyle: const TextStyle(color: Colors.grey, fontSize: 12),
+              errorStyle: const TextStyle(color: Colors.red, height: 1),
+              disabledBorder: OutlineInputBorder(
+                borderRadius: borderRadius!,
+                borderSide:
+                    const BorderSide(color: AppColors.primaryBlue, width: 2),
+              ),
+              errorBorder:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              border: OutlineInputBorder(
+                borderRadius: borderRadius!,
+                borderSide:
+                    const BorderSide(color: AppColors.primaryBlue, width: 2),
+              ),
+            ),
+          )),
     );
   }
 }

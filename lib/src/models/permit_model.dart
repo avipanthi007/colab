@@ -42,7 +42,7 @@ class PermitData {
   int? subSubLocationId;
   int? activityHeadId;
   int? activityId;
-  RxString? permitDate;
+  String? permitDate;
   String? startTime;
   String? endTime;
   final int triggerBy;
@@ -140,7 +140,7 @@ class PermitData {
       subSubLocationId: json['sub_sub_location_id'],
       activityHeadId: json['activity_head_id'],
       activityId: json['activity_id'],
-      permitDate: json['permit_date'] != null ? RxString(json['permit_date'].toString()) : null,
+      permitDate: json['permit_date']?.toString(),
       startTime: json['start_time']?.toString(),
       endTime: json['end_time']?.toString(),
       triggerBy: json['trigger_by'] ?? 0,
@@ -172,21 +172,17 @@ class PermitData {
       contractorName: json['contractor_name']?.toString() ?? '',
       subSubLocationName: json['sub_sub_location_name']?.toString(),
       permitTriggerSectionInfo: List<PermitTriggerSectionInfo>.from(
-          json['permitTriggerSectionInfo']
-                  ?.map((x) => PermitTriggerSectionInfo.fromJson(x)) ??
-              []),
+          (json['permitTriggerSectionInfo'] ?? [])
+              .map((x) => PermitTriggerSectionInfo.fromJson(x))),
       permitUserRoleInfo: List<PermitUserRoleInfo>.from(
-          json['permitUserRoleInfo']
-                  ?.map((x) => PermitUserRoleInfo.fromJson(x)) ??
-              []),
+          (json['permitUserRoleInfo'] ?? [])
+              .map((x) => PermitUserRoleInfo.fromJson(x))),
       permitTriggerLabours: List<PermitTriggerLabour>.from(
-          json['permitTriggerLabours']
-                  ?.map((x) => PermitTriggerLabour.fromJson(x)) ??
-              []),
+          (json['permitTriggerLabours'] ?? [])
+              .map((x) => PermitTriggerLabour.fromJson(x))),
       permitApproverStatus: List<PermitApproverStatus>.from(
-          json['permitApproverStatus']
-                  ?.map((x) => PermitApproverStatus.fromJson(x)) ??
-              []),
+          (json['permitApproverStatus'] ?? [])
+              .map((x) => PermitApproverStatus.fromJson(x))),
     );
   }
 
@@ -291,9 +287,8 @@ class PermitTriggerSectionInfo {
       updatedBy: json['updated_by'],
       isArchived: json['is_archived'] ?? 0,
       permitTriggerSectionLinkInfo: List<PermitTriggerSectionLinkInfo>.from(
-          json['permitTriggerSectionLinkInfo']
-                  ?.map((x) => PermitTriggerSectionLinkInfo.fromJson(x)) ??
-              []),
+          (json['permitTriggerSectionLinkInfo'] ?? [])
+              .map((x) => PermitTriggerSectionLinkInfo.fromJson(x))),
     );
   }
 
@@ -342,8 +337,6 @@ class PermitTriggerSectionLinkInfo {
   final String? s3Key;
   final String? fileId;
   final List<dynamic> permitTriggerApproverComment;
-  final userInput = TextEditingController();
-  final Rx<File?> imgUploaded = Rx<File?>(null);
 
   PermitTriggerSectionLinkInfo({
     required this.id,
@@ -513,7 +506,7 @@ class PermitTriggerLabour {
   final int clientId;
   final int projectId;
   final int permitTriggerId;
-  final int labourCount;
+  int labourCount;
   final int pwrType;
   final String trade;
   final String createdAt;
@@ -524,7 +517,7 @@ class PermitTriggerLabour {
   final int? updatedBy;
   final int isArchived;
   final labourInput = TextEditingController();
-  String? labourCounts;
+  String? labourTrade;
 
   PermitTriggerLabour({
     required this.id,

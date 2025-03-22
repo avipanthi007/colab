@@ -31,7 +31,7 @@ class _PermitsTabState extends State<PermitsTab> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 17.h,
+        toolbarHeight: 18.h,
         automaticallyImplyLeading: false,
         flexibleSpace: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -16,6 +16,8 @@ class HomeBottomNavigationbar extends StatefulWidget {
 }
 
 class _HomeBottomNavigationbarState extends State<HomeBottomNavigationbar> {
+  final permitController = Get.find<PermitsController>();
+  RxInt selectedIndex = 0.obs;
   @override
   void initState() {
     super.initState();
@@ -23,9 +25,6 @@ class _HomeBottomNavigationbarState extends State<HomeBottomNavigationbar> {
       await getData();
     });
   }
-
-  final permitController = Get.find<PermitsController>();
-  RxInt selectedIndex = 0.obs;
 
   static List<Widget> widgetOptions = <Widget>[
     DashboardPage(),
@@ -94,15 +93,6 @@ class _HomeBottomNavigationbarState extends State<HomeBottomNavigationbar> {
   }
 
   getData() async {
-    await permitController.fetchPermitData(); // not needed
-    await permitController.approversData(); //
-    await permitController.contractorsData();
-    await permitController.laboursData();
-    await permitController.getSubSubLocation();
-    await permitController.getSubLocation();
-    await permitController.getLocation();
     await permitController.getPermitsCounts();
-    await permitController.getlinkingActivity();
-    await permitController.getActivityHead();
   }
 }

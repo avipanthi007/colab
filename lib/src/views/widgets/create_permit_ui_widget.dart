@@ -1,14 +1,16 @@
 import 'package:colab/core/theme/colors.dart';
 import 'package:colab/core/utils/constants/text_constant.dart';
 import 'package:colab/services/routing/route_path.dart';
+import 'package:colab/src/models/permit_config_model.dart';
 import 'package:colab/src/models/permit_model.dart';
+import 'package:colab/src/views/widgets/create_permit_helper.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 
 class CreatePermitUiWidget extends StatelessWidget {
-  PermitData data;
+  PermitConfigData data;
   CreatePermitUiWidget({super.key, required this.data});
 
   @override
@@ -20,23 +22,7 @@ class CreatePermitUiWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-            height: 5.h,
-            width: 100.w,
-            decoration: BoxDecoration(
-                color: AppColors.primaryBlack,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12))),
-            child: Text(
-              data.permitName.toString() ?? TextConstant.permitName,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: AppColors.white, fontSize: 17.sp),
-            ),
-          ),
+          blackHeader(context,title: data.permitName.toString()),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.5.h),
             child: Column(
@@ -69,7 +55,8 @@ class CreatePermitUiWidget extends StatelessWidget {
                 Center(
                   child: GestureDetector(
                     onTap: () {
-                      context.push(RoutePath.createPermitDetails, extra: data);
+                      context.push(RoutePath.createPermitDetails,
+                          extra: data);
                     },
                     child: Container(
                       height: 5.h,
@@ -97,4 +84,6 @@ class CreatePermitUiWidget extends StatelessWidget {
       ),
     );
   }
+
+  
 }

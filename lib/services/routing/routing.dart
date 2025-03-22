@@ -7,9 +7,12 @@ import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/create_per
 import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/create_permit_details.dart';
 import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/dynamic_list_update.dart';
 import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/future.dart';
+import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/permit_details.dart';
 import 'package:colab/src/views/screens/dashboard/permits/permits_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../src/models/permit_config_model.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -55,7 +58,7 @@ class AppRouting {
         GoRoute(
             path: RoutePath.createPermitDetails,
             builder: (context, state) {
-              final permitData = state.extra as PermitData;
+              final permitData = state.extra as PermitConfigData;
               return CreatePermitDetails(
                 data: permitData,
               );
@@ -64,6 +67,14 @@ class AppRouting {
             path: RoutePath.dynamicListUpdate,
             builder: (context, state) {
               return DynamicListUpdate();
+            }),
+        GoRoute(
+            path: RoutePath.permitDetails,
+            builder: (context, state) {
+              final permitData = state.extra as PermitData;
+              return PermitDetails(
+                permitData: permitData,
+              );
             }),
       ]);
 }

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
-
 class CreatePermit extends StatefulWidget {
   const CreatePermit({super.key});
 
@@ -14,6 +13,15 @@ class CreatePermit extends StatefulWidget {
 }
 
 class _CreatePermitState extends State<CreatePermit> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((time) async {
+      await getData();
+    });
+  }
+
   final permitController = Get.find<PermitsController>();
   @override
   Widget build(BuildContext context) {
@@ -29,11 +37,29 @@ class _CreatePermitState extends State<CreatePermit> {
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
-        body: ListView.builder(
-            itemCount: permitController.permitDataList.length,
-            itemBuilder: (context, index) {
-              final data = permitController.permitDataList[index];
-              return CreatePermitUiWidget(data: data);
-            }));
+        body: Obx(
+          () => permitController.isLoading.value
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : ListView.builder(
+                  itemCount: permitController.permitConfigList.length,
+                  itemBuilder: (context, index) {
+                    final data = permitController.permitConfigList[index];
+                    return CreatePermitUiWidget(data: data);
+                  }),
+        ));
+  }
+
+  getData() async {
+    await permitController.getPermitConfig();
+    await permitController.approversData();
+    await permitController.contractorsData();
+    await permitController.laboursData();
+    await permitController.getSubSubLocation();
+    await permitController.getSubLocation();
+    await permitController.getLocation();
+    await permitController.getlinkingActivity();
+    await permitController.getActivityHead();
   }
 }
