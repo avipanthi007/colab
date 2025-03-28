@@ -83,7 +83,10 @@ Widget dropDownRow(BuildContext context,
 }
 
 Widget kRepeatedColumn(BuildContext context,
-    {required String title, required String subtitle, double width = 40, Color color = AppColors.black}) {
+    {required String title,
+    required String subtitle,
+    double width = 40,
+    Color color = AppColors.black}) {
   return Container(
     padding: EdgeInsets.all(10),
     width: width.w,
@@ -93,37 +96,35 @@ Widget kRepeatedColumn(BuildContext context,
         Text(
           title,
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              fontSize: 17.sp,
-              fontWeight: FontWeight.bold,
-              color: color),
+              fontSize: 16.5.sp, fontWeight: FontWeight.bold, color: color),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
         Text(
           subtitle,
           style: Theme.of(context).textTheme.labelMedium!.copyWith(
-              color: color,
-              fontWeight: FontWeight.w400,
-              fontSize: 14.sp),
+              color: color, fontWeight: FontWeight.w400, fontSize: 14.sp),
         ),
       ],
     ),
   );
 }
-Container blackHeader(BuildContext context,{required String title}) {
-    return Container(
-          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-          height: 5.h,
-          width: 100.w,
-          decoration: BoxDecoration(
-              color: AppColors.primaryBlack,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12))),
-          child: Text(
-            title ?? TextConstant.permitName,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(color: AppColors.white, fontSize: 17.sp),
-          ),
-        );
-  }
+
+Container blackHeader(BuildContext context, {required String title}) {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+    height: 5.h,
+    width: 100.w,
+    decoration: BoxDecoration(
+        color: AppColors.primaryBlack,
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+    child: Text(
+      title ?? TextConstant.permitName,
+      style: Theme.of(context)
+          .textTheme
+          .bodyMedium!
+          .copyWith(color: AppColors.white, fontSize: 16.sp),
+    ),
+  );
+}

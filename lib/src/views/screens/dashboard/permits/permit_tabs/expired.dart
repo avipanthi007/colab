@@ -1,7 +1,6 @@
 import 'package:colab/core/theme/colors.dart';
 import 'package:colab/core/utils/constants/text_constant.dart';
 import 'package:colab/core/utils/helper.dart';
-import 'package:colab/main.dart';
 import 'package:colab/services/routing/route_path.dart';
 import 'package:colab/src/controllers/permits_controller.dart';
 import 'package:flutter/material.dart';
@@ -18,160 +17,212 @@ class ExpiredPermits extends StatefulWidget {
 
 class _ExpiredPermitsState extends State<ExpiredPermits> {
   final permitController = Get.find<PermitsController>();
+  final scrollController = ScrollController();
+  final RxInt page = 1.obs;
+  final RxBool isLoadingMore = false.obs;
+  bool hasMoreData = true;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((time) async {
-      await getData();
+    scrollController.addListener(_scrollListener);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getData();
     });
+  }
+
+  void _scrollListener() {
+    if (scrollController.position.pixels >=
+            scrollController.position.maxScrollExtent - 100 &&
+        !isLoadingMore.value &&
+        hasMoreData) {
+      page.value++;
+      getData();
+    }
+  }
+
+  Future<void> getData() async {
+    if (page.value == 1) {
+      permitController.permitExpiredList.clear();
+    }
+
+    isLoadingMore.value = true;
+
+    await permitController.fetchExpiredData(page: page.value);
+
+    if (permitController.permitExpiredList.isEmpty) {
+      hasMoreData = false;
+    }
+
+    isLoadingMore.value = false;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Obx(
-      () => permitController.isLoading.value
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : ListView.builder(
-              itemCount: permitController.permitDataList.length,
-              itemBuilder: (context, index) {
-                final data = permitController.permitDataList[index];
-                return GestureDetector(
-                  onTap: () {
-                    context.push(RoutePath.permitDetails, extra: data);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.only(bottom: 2.h),
-                    margin:
-                        EdgeInsets.symmetric(horizontal: 1.5.w, vertical: 1.h),
-                    decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(12)),
-                    child: Column(
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 0.6.h, horizontal: 4.w),
-                              width: 50.w,
-                              decoration: BoxDecoration(
-                                  color: AppColors.primaryBlack,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(12),
-                                      bottomRight: Radius.circular(12))),
-                              child: Text(
-                                data.permitName?.toString() ??
-                                    TextConstant.user,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(
-                                      color: AppColors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                            ),
-                            Spacer(),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 0.6.h, horizontal: 6.w),
-                              width: 45.w,
-                              decoration: BoxDecoration(
-                                  color: AppColors.textGreyColor,
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(12),
-                                      bottomLeft: Radius.circular(12))),
-                              child: Text(
-                                "ID: PER${data.id}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(
-                                        fontSize: 17.sp,
-                                        fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 2.w),
-                          child: Column(
+      body: Obx(
+        () => permitController.isLoading.value && page.value == 1
+            ? Center(child: CircularProgressIndicator())
+            : ListView.builder(
+                controller: scrollController,
+                shrinkWrap: true,
+                itemCount: permitController.permitExpiredList.length +
+                    (isLoadingMore.value ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index == permitController.permitExpiredList.length) {
+                    return loadingIndicator();
+                  }
+
+                  final data = permitController.permitExpiredList[index];
+                  return GestureDetector(
+                    onTap: () {
+                      context.push(RoutePath.permitDetails, extra: data);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.only(bottom: 2.h),
+                      margin: EdgeInsets.symmetric(
+                          horizontal: 1.5.w, vertical: 1.h),
+                      decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(12)),
+                      child: Column(
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  kRepeatedColumn(context,
-                                      title: formatDate(data.permitDate),
-                                      subtitle: TextConstant.permitDate),
-                                  kRepeatedColumn(context,
-                                      title: formatTime(data.startTime),
-                                      subtitle: TextConstant.permitFrom),
-                                  kRepeatedColumn(context,
-                                      title: formatTime(data.endTime),
-                                      subtitle: TextConstant.permitTo),
-                                ],
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 0.6.h, horizontal: 4.w),
+                                width: 50.w,
+                                decoration: BoxDecoration(
+                                    color: AppColors.primaryBlack,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(12),
+                                        bottomRight: Radius.circular(12))),
+                                child: Text(
+                                  data.permitName?.toString() ??
+                                      TextConstant.user,
+                                  maxLines: 2,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                        color: AppColors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
                               ),
-                              SizedBox(height: 1.h),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  kRepeatedColumn(context,
-                                      width: 40,
-                                      title:
-                                          "${data.triggerFirstName} ${data.triggerLastName}(${data.triggerUserDesignation})",
-                                      subtitle: TextConstant.requestedBy),
-                                  kRepeatedColumn(context,
-                                      width: 40,
-                                      title: formatFullDateTime(data.syncAt),
-                                      subtitle: TextConstant.triggeredAt),
-                                ],
+                              Spacer(),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 0.6.h, horizontal: 6.w),
+                                width: 45.w,
+                                decoration: BoxDecoration(
+                                    color: AppColors.textGreyColor,
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(12),
+                                        bottomLeft: Radius.circular(12))),
+                                child: Text(
+                                  "ID: PER${data.id}",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                          fontSize: 17.sp,
+                                          fontWeight: FontWeight.bold),
+                                ),
                               ),
-                              SizedBox(height: 1.h),
-                              Divider(),
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 3.w, vertical: 1.h),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: AppColors.primaryYellow),
-                                    child: Text(
-                                      TextConstant.pending,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16.sp),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  kRepeatedColumn(context,
-                                      width: 50,
-                                      title: "${data.contractorName}",
-                                      subtitle: TextConstant.contractor),
-                                ],
-                              )
                             ],
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 2.w),
+                            child: Column(
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    kRepeatedColumn(context,
+                                        title: formatDate(data.permitDate),
+                                        subtitle: TextConstant.permitDate),
+                                    kRepeatedColumn(context,
+                                        title: formatTime(data.startTime),
+                                        subtitle: TextConstant.permitFrom),
+                                    kRepeatedColumn(context,
+                                        title: formatTime(data.endTime),
+                                        subtitle: TextConstant.permitTo),
+                                  ],
+                                ),
+                                SizedBox(height: 1.h),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    kRepeatedColumn(context,
+                                        width: 40,
+                                        title:
+                                            "${data.triggerFirstName} ${data.triggerLastName} (${data.triggerUserDesignation})",
+                                        subtitle: TextConstant.requestedBy),
+                                    kRepeatedColumn(context,
+                                        width: 40,
+                                        title: formatFullDateTime(data.syncAt),
+                                        subtitle: TextConstant.triggeredAt),
+                                  ],
+                                ),
+                                SizedBox(height: 1.h),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 3.w, vertical: 1.h),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          color: AppColors.primaryYellow),
+                                      child: Text(
+                                        TextConstant.pending,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16.sp),
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    kRepeatedColumn(context,
+                                        width: 50,
+                                        title: "${data.contractorName}",
+                                        subtitle: TextConstant.contractor),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              }),
-    ));
+                  );
+                }),
+      ),
+    );
+  }
+
+  Widget loadingIndicator() {
+    return Obx(() {
+      if (isLoadingMore.value) {
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: 2.h),
+          child: Center(child: CircularProgressIndicator()),
+        );
+      }
+      return SizedBox.shrink();
+    });
   }
 
   SizedBox kRepeatedColumn(BuildContext context,
@@ -200,7 +251,9 @@ class _ExpiredPermitsState extends State<ExpiredPermits> {
     );
   }
 
-  getData() async {
-    await permitController.fetchPermitData();
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 }

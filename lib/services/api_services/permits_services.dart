@@ -31,12 +31,75 @@ class PermitsServices {
   }
 
   int projectId = 1;
-  Future<Either<String, List<PermitData>>> fetchPermitData() async {
+  Future<Either<String, List<PermitData>>> fetchExpiredData(
+      {required page}) async {
     int clientId = await getClientId();
     try {
       final response = await _apiBaseClientService.request(
         endpoint:
-            "${ApiConstants.expiredPermits}?client_id=${clientId}&project_id=${projectId}&mainId=35&type_of_date=EXPIRED&status=null&page=1",
+            "${ApiConstants.expiredPermits}?client_id=${clientId}&project_id=${projectId}&mainId=35&type_of_date=EXPIRED&status=null&page=$page",
+        method: 'GET',
+      );
+
+      debugPrint('Fetch success: ${response.data}');
+
+      if (response.data != null && response.data['permitData'] != null) {
+        final List<dynamic> results = response.data['permitData']['results'];
+
+        final permitsList =
+            results.map((json) => PermitData.fromJson(json)).toList();
+
+        debugPrint('Fetched permit data: $permitsList');
+
+        return Right(permitsList);
+      } else {
+        final errorMessage =
+            response.data?['message'] ?? "Something went wrong!";
+        return Left(errorMessage);
+      }
+    } catch (e, stackTrace) {
+      debugPrint('Error in fetchPermitData: $e\n$stackTrace');
+      return Left("Unexpected error: ${e.toString()}");
+    }
+  }
+
+  Future<Either<String, List<PermitData>>> fetchFutureData() async {
+    int clientId = await getClientId();
+    try {
+      final response = await _apiBaseClientService.request(
+        endpoint:
+            "${ApiConstants.expiredPermits}?client_id=${clientId}&project_id=${projectId}&mainId=35&type_of_date=FUTURE&status=null&page=1",
+        method: 'GET',
+      );
+
+      debugPrint('Fetch success: ${response.data}');
+
+      if (response.data != null && response.data['permitData'] != null) {
+        final List<dynamic> results = response.data['permitData']['results'];
+
+        final permitsList =
+            results.map((json) => PermitData.fromJson(json)).toList();
+
+        debugPrint('Fetched permit data: $permitsList');
+
+        return Right(permitsList);
+      } else {
+        final errorMessage =
+            response.data?['message'] ?? "Something went wrong!";
+        return Left(errorMessage);
+      }
+    } catch (e, stackTrace) {
+      debugPrint('Error in fetchPermitData: $e\n$stackTrace');
+      return Left("Unexpected error: ${e.toString()}");
+    }
+  }
+
+  Future<Either<String, List<PermitData>>> fetchCurrentData() async {
+    int clientId = await getClientId();
+    try {
+      final response = await _apiBaseClientService.request(
+        endpoint:
+            "${ApiConstants.expiredPermits}?client_id=${clientId}&project_id=${projectId}&mainId=35&type_of_date=CURRENT&status=null&page=1",
         method: 'GET',
       );
 
@@ -336,12 +399,20 @@ class PermitsServices {
     try {
       List<Map<String, dynamic>> permitList = [];
       List<Map<String, dynamic>> labourList = [];
+      List approversList = [];
+      List coRequesterList = [];
       data.permitTriggerLabours.forEach((element) {
         labourList.add({
           "labour_count": element.labourInput!.value.text,
           "trade": element.type.value,
           "pwr_type": element.pwrType
         });
+      });
+      data.permitApproveInfo.forEach((element) {
+        approversList.addAll(element.approversData);
+      });
+      data.permitApproveInfo.forEach((element) {
+        coRequesterList.addAll(element.coRequesterData);
       });
       data.permitSectionInfo.forEach((section) {
         section.permitSectionLinkInfo.forEach((sectionLink) {
@@ -360,6 +431,7 @@ class PermitsServices {
             "image_manually": sectionLink.imgUploaded.value?.path ?? "",
             "remark": ""
           });
+          infoLog(sectionLink.imgUploaded.value?.path ?? "Image Not available");
         });
       });
 
@@ -381,7 +453,7 @@ class PermitsServices {
             "sub_sub_location_id": data.subSubLocationId.value,
             "activity_head_id": data.getActivityHeadId,
             "activity_id": data.getActivityId,
-            "user_permission": [],
+            "user_permission": coRequesterList,
             "permit_date": data.getPermitDate.toString(),
             "start_time": data.getStartTime.toString(),
             "end_time": data.getEndTime.toString(),
@@ -397,14 +469,15 @@ class PermitsServices {
             "approved_status": "",
             "trigger_by": "14",
             "approved_by": null,
-            "approver": [18],
-            "contractor_id": 5,
+            "approver": approversList,
+            "contractor_id": data.getContractorId.value,
             "labours": labourList
           }
         ])
       });
       infoLog('Request data Location: $permitList');
-      log('Request data **: $permitList');
+      infoLog('Approver data **: $approversList');
+      infoLog('Co-Requester data **: $coRequesterList');
       infoLog('Request data labourList: $labourList');
 
       final response = await _apiBaseClientService.request(

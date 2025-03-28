@@ -22,7 +22,7 @@ class CreatePermitUiWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          blackHeader(context,title: data.permitName.toString()),
+          blackHeader(context, title: data.permitName.toString()),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.5.h),
             child: Column(
@@ -55,8 +55,7 @@ class CreatePermitUiWidget extends StatelessWidget {
                 Center(
                   child: GestureDetector(
                     onTap: () {
-                      context.push(RoutePath.createPermitDetails,
-                          extra: data);
+                      context.push(RoutePath.createPermitDetails, extra: data);
                     },
                     child: Container(
                       height: 5.h,
@@ -84,6 +83,4 @@ class CreatePermitUiWidget extends StatelessWidget {
       ),
     );
   }
-
-  
 }

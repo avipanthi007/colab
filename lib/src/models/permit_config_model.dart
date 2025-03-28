@@ -63,6 +63,7 @@ class PermitConfigData {
   String userInputTexts = '';
   final userInput = TextEditingController();
   final Rx<File?> imgUploaded = Rx<File?>(null);
+  RxInt getContractorId =0.obs;
 
   PermitConfigData({
     required this.id,
@@ -306,6 +307,8 @@ class PermitSectionLinkInfo {
 class PermitApproveInfo {
   final int id;
   final String permitUsersName;
+  RxList approversData = [].obs;
+  RxList coRequesterData = [].obs;
 
   PermitApproveInfo({
     required this.id,

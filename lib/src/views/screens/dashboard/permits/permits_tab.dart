@@ -3,6 +3,7 @@ import 'package:colab/core/utils/constants/text_constant.dart';
 import 'package:colab/services/routing/route_path.dart';
 import 'package:colab/src/controllers/permits_controller.dart';
 import 'package:colab/src/views/screens/dashboard/my_tools.dart';
+import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/current.dart';
 import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/expired.dart';
 import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/future.dart';
 import 'package:flutter/material.dart';
@@ -151,7 +152,7 @@ class _PermitsTabState extends State<PermitsTab> with TickerProviderStateMixin {
       ),
       body: TabBarView(controller: _tabController, children: [
         FuturePermits(),
-        MyTools(),
+        CurrentPermits(),
         ExpiredPermits(),
       ]),
       floatingActionButton: FloatingActionButton(

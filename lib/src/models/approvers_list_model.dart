@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+
 class Approvers {
   final String userId;
   final String name;
@@ -8,6 +10,9 @@ class Approvers {
   final String? userDesignation;
   final String? contractorCompanyName;
   final String? userCompanyName;
+  RxBool approveCheckValue = false.obs;
+  RxBool requesterCheckValue = false.obs;
+  
 
   Approvers({
     required this.userId,
@@ -50,7 +55,9 @@ class Approvers {
   }
 }
 
-// Example usage to parse the response
+
+
+
 List<Approvers> parseUsers(Map<String, dynamic> response) {
   if (response['success'] == true && response['data'] is List) {
     return (response['data'] as List)

@@ -1,6 +1,5 @@
 import 'package:colab/core/theme/colors.dart';
 import 'package:colab/src/models/permit_config_model.dart';
-import 'package:colab/src/models/permit_model.dart';
 import 'package:colab/src/views/widgets/create_permit_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';

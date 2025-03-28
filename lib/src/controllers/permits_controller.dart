@@ -1,11 +1,9 @@
 import 'dart:io';
 
 import 'package:colab/core/utils/helper.dart';
-import 'package:colab/core/utils/local_storage/shared_pref.dart';
 import 'package:colab/services/api_services/base_class_services.dart';
 import 'package:colab/services/api_services/permits_services.dart';
 import 'package:colab/src/models/activity_head_model.dart';
-import 'package:colab/src/models/add_contractor.dart';
 import 'package:colab/src/models/approvers_list_model.dart';
 import 'package:colab/src/models/contractor_list_model.dart';
 import 'package:colab/src/models/labour_list_model.dart';
@@ -16,11 +14,8 @@ import 'package:colab/src/models/permit_count_model.dart';
 import 'package:colab/src/models/permit_model.dart';
 import 'package:colab/src/models/sub_location_model.dart';
 import 'package:colab/src/models/sub_sub_location_model.dart';
-import 'package:colab/src/views/screens/dashboard/permits/permit_tabs/create_permit_details.dart';
-import 'package:colab/src/views/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
 class PermitsController extends GetxController {
   late PermitsServices permitsServices;
@@ -53,7 +48,10 @@ class PermitsController extends GetxController {
   RxString permitFrom = "".obs;
 
   RxBool isLoading = false.obs;
-  var permitDataList = <PermitData>[].obs;
+  var permitExpiredList = <PermitData>[].obs;
+  var permitFutureList = <PermitData>[].obs;
+  var permitCurrentList = <PermitData>[].obs;
+
   var approversDataList = <Approvers>[].obs;
   var contractorDataList = <ContractorsList>[].obs;
   var laboursList = <Trade>[].obs;
@@ -65,18 +63,55 @@ class PermitsController extends GetxController {
   var linkingActivityList = <LinkingActivity>[].obs;
   var permitConfigList = <PermitConfigData>[].obs;
 
-  Future<void> fetchPermitData() async {
+ Future<void> fetchExpiredData({required int page}) async {
+    isLoading.value = true;
+    try {
+      final result = await permitsServices.fetchExpiredData(page: page);
+      result.fold(
+        (failure) {
+          debugPrint('Fetch failed: $failure');
+        },
+        (success) {
+          if (page == 1) {
+            permitExpiredList.clear();
+          }
+          permitExpiredList.addAll(success);
+        },
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> fetchFutureData() async {
     isLoading.value = true;
     print("Fetching Permit Data...");
-    final result = await permitsServices.fetchPermitData();
+    final result = await permitsServices.fetchFutureData();
     result.fold(
       (failure) {
         isLoading.value = false;
         debugPrint('Fetch failed: $failure');
       },
       (success) {
-        permitDataList.assignAll(success);
-        infoLog('Fetched Permit Data: $success');
+        permitFutureList.assignAll(success);
+        infoLog('Fetched Future Data: $success');
+        isLoading.value = false;
+      },
+    );
+  }
+
+  Future<void> fetchCurrentData() async {
+    isLoading.value = true;
+    print("Fetching Permit Data...");
+    final result = await permitsServices.fetchCurrentData();
+    result.fold(
+      (failure) {
+        isLoading.value = false;
+        debugPrint('Fetch failed: $failure');
+      },
+      (success) {
+        permitCurrentList.assignAll(success);
+        infoLog('Fetched Future Data: $success');
         isLoading.value = false;
       },
     );
@@ -302,9 +337,4 @@ class PermitsController extends GetxController {
       },
     );
   }
-
- 
-
-
- 
 }

@@ -3,10 +3,8 @@ import 'dart:io';
 import 'package:colab/core/theme/colors.dart';
 import 'package:colab/core/utils/constants/imageConstant.dart';
 import 'package:colab/core/utils/helper.dart';
-import 'package:colab/services/routing/route_path.dart';
 import 'package:colab/src/controllers/permits_controller.dart';
 import 'package:colab/src/models/permit_config_model.dart';
-import 'package:colab/src/models/permit_model.dart';
 import 'package:colab/src/views/widgets/create_permit_helper.dart';
 import 'package:colab/src/views/widgets/create_permit_rcolumn_ui.dart';
 import 'package:colab/src/views/widgets/custom_button.dart';
@@ -27,7 +25,6 @@ class CreatePermitDetails extends StatefulWidget {
 class _CreatePermitDetailsState extends State<CreatePermitDetails> {
   final permitController = Get.find<PermitsController>();
 
-  final dobController = TextEditingController().obs;
   RxBool switchValue = false.obs;
   final formKey = GlobalKey<FormState>();
 
@@ -65,7 +62,6 @@ class _CreatePermitDetailsState extends State<CreatePermitDetails> {
                           ? "Select Location"
                           : "${permitController.locationName.value}/${permitController.subLocationName.value}/${permitController.subsubLocationName.value}",
                       ontap: () {
-                    // Replace the showModalBottomSheet for location selection with this:
                     showModalBottomSheet(
                       context: context,
                       isScrollControlled: true,
@@ -661,8 +657,14 @@ class _CreatePermitDetailsState extends State<CreatePermitDetails> {
                       : CustomButton(
                           ontap: () async {
                             if (formKey.currentState!.validate()) {
-                              await permitController.triggerPermit(
-                                  data: widget.data);
+                              await permitController
+                                  .triggerPermit(data: widget.data)
+                                  .then((onValue) async {
+                                await permitController.getPermitsCounts();
+                              }).then((onValue) {
+                                context.pop();
+                                context.pop();
+                              });
                             }
                           },
                           titleText: "Send For Approval",
@@ -832,6 +834,8 @@ class _CreatePermitDetailsState extends State<CreatePermitDetails> {
                   permitController.contractorName.value = permitController
                       .contractorDataList[index].contractorName
                       .toString();
+                  widget.data.getContractorId.value =
+                      permitController.contractorDataList[index].pid;
                   context.pop();
                 },
               );
@@ -986,45 +990,117 @@ class _CreatePermitDetailsState extends State<CreatePermitDetails> {
     return Column(
       children: [
         buildApproverDropdown(
-            "Select Approvers", permitController.approverName),
-        buildApproverDropdown(
-            "Select Co-Requesters", permitController.coRequesterName),
+          permitController.approverName,
+        ),
+        buildCoRequesterDropdown()
       ],
     );
   }
 
-  Widget buildApproverDropdown(String header, RxString value) {
+  Widget buildApproverDropdown(RxString value) {
     return kRepeatedPermitDataColumn(
       context,
-      header: header,
+      header: "Select Approvers",
       rowTitle: value.isEmpty ? "Select Individual" : value.toString(),
       icon: Icons.keyboard_arrow_down_sharp,
       color: AppColors.lightBackground,
-      iconTap: () => showApproverBottomSheet(value),
+      iconTap: () => showModalBottomSheet(
+        context: context,
+        builder: (context) => Container(
+          padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
+          height: 60.h,
+          child: SingleChildScrollView(
+            child: Column(
+              children: List.generate(permitController.approversDataList.length,
+                  (index) {
+                return Obx(
+                  () => ListTile(
+                    title: Text(
+                        "${permitController.approversDataList[index].firstName} ${permitController.approversDataList[index].lastName}"),
+                    onTap: () {
+                      value.value = permitController
+                          .approversDataList[index].firstName
+                          .toString();
+                      context.pop();
+                    },
+                    trailing: Checkbox(
+                        value: permitController
+                            .approversDataList[index].approveCheckValue.value,
+                        onChanged: (value) {
+                          permitController.approversDataList[index]
+                              .approveCheckValue.value = value!;
+
+                          if (value) {
+                            widget.data.permitApproveInfo.first.approversData
+                                .add(permitController
+                                    .approversDataList[index].id);
+                          } else {
+                            widget.data.permitApproveInfo.first.approversData
+                                .remove(permitController
+                                    .approversDataList[index].id);
+                          }
+
+                          log(widget.data.permitApproveInfo.first.approversData
+                              .toString());
+                        }),
+                  ),
+                );
+              }),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
-  void showApproverBottomSheet(RxString value) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => Container(
-        padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
-        height: 60.h,
-        child: SingleChildScrollView(
-          child: Column(
-            children: List.generate(permitController.approversDataList.length,
-                (index) {
-              return ListTile(
-                title: Text(
-                    "${permitController.approversDataList[index].firstName}${permitController.approversDataList[index].lastName}"),
-                onTap: () {
-                  value.value = permitController
-                      .approversDataList[index].firstName
-                      .toString();
-                  context.pop();
-                },
-              );
-            }),
+  Widget buildCoRequesterDropdown() {
+    return kRepeatedPermitDataColumn(
+      context,
+      header: "Select Co-Requester",
+      rowTitle: "Select Individual",
+      icon: Icons.keyboard_arrow_down_sharp,
+      color: AppColors.lightBackground,
+      iconTap: () => showModalBottomSheet(
+        context: context,
+        builder: (context) => Container(
+          padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
+          height: 60.h,
+          child: SingleChildScrollView(
+            child: Column(
+              children: List.generate(permitController.approversDataList.length,
+                  (index) {
+                return Obx(
+                  () => ListTile(
+                    title: Text(
+                        "${permitController.approversDataList[index].firstName} ${permitController.approversDataList[index].lastName}"),
+                    onTap: () {
+                      context.pop();
+                    },
+                    trailing: Checkbox(
+                        value: permitController
+                            .approversDataList[index].requesterCheckValue.value,
+                        onChanged: (value) {
+                          permitController.approversDataList[index]
+                              .requesterCheckValue.value = value!;
+
+                          if (value) {
+                            widget.data.permitApproveInfo.first.coRequesterData
+                                .add(permitController
+                                    .approversDataList[index].id);
+                          } else {
+                            widget.data.permitApproveInfo.first.coRequesterData
+                                .remove(permitController
+                                    .approversDataList[index].id);
+                          }
+
+                          log(widget
+                              .data.permitApproveInfo.first.coRequesterData
+                              .toString());
+                        }),
+                  ),
+                );
+              }),
+            ),
           ),
         ),
       ),

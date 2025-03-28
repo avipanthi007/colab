@@ -4,6 +4,7 @@ import 'package:colab/core/utils/helper.dart';
 import 'package:colab/services/routing/route_path.dart';
 import 'package:colab/src/models/permit_model.dart';
 import 'package:colab/src/views/widgets/create_permit_helper.dart';
+import 'package:colab/src/views/widgets/custom_button.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -66,9 +67,9 @@ class _PermitDetailsState extends State<PermitDetails> {
                                 .textTheme
                                 .bodyMedium!
                                 .copyWith(
-                                  color: AppColors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                    color: AppColors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17.sp),
                           ),
                         ),
                         Spacer(),
@@ -82,7 +83,9 @@ class _PermitDetailsState extends State<PermitDetails> {
                                   topRight: Radius.circular(12),
                                   bottomLeft: Radius.circular(12))),
                           child: Text(
-                            "ID: PER${widget.permitData.id}",
+                            widget.permitData.activityHead != null
+                                ? "${widget.permitData.activityHead.toString()}/${widget.permitData.activity.toString()}"
+                                : "Activity",
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!
@@ -196,7 +199,62 @@ class _PermitDetailsState extends State<PermitDetails> {
                   children: [
                     blackHeader(context,
                         title: widget.permitData.contractorName.toString()),
-                    Center(child: Text("No Labours"))
+                    widget.permitData.permitTriggerLabours.isEmpty
+                        ? SizedBox()
+                        : Column(
+                            children: List.generate(
+                                widget.permitData.permitTriggerLabours.length,
+                                (labourIndex) {
+                              final labours = widget
+                                  .permitData.permitTriggerLabours[labourIndex];
+                              return Row(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: 0.8.h, horizontal: 2.w),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 4.w, vertical: 1.h),
+                                    height: 5.h,
+                                    width: 60.w,
+                                    decoration: BoxDecoration(
+                                        color: AppColors.lightBackground,
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    child: Text(
+                                      labours.trade,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                              color: AppColors.black,
+                                              fontSize: 17.sp),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: 0.8.h, horizontal: 2.w),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 4.w, vertical: 1.h),
+                                    height: 5.h,
+                                    width: 15.w,
+                                    decoration: BoxDecoration(
+                                        color: AppColors.lightBackground,
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    child: Text(
+                                      labours.labourCount.toString(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                              color: AppColors.black,
+                                              fontSize: 17.sp),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }),
+                          )
                   ],
                 ),
               ),
@@ -209,76 +267,244 @@ class _PermitDetailsState extends State<PermitDetails> {
                 child: Column(
                   children: [
                     blackHeader(context, title: "Co-Requester"),
-                    //Center(child: Text("No Labours"))
+                    Column(
+                      children: List.generate(
+                        widget.permitData.permitUserRoleInfo.length,
+                        (itemIndex) {
+                          final itemData =
+                              widget.permitData.permitUserRoleInfo[itemIndex];
+                          return Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: 0.8.h, horizontal: 2.w),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 4.w, vertical: 1.h),
+                                    height: 5.h,
+                                    width: 70.w,
+                                    decoration: BoxDecoration(
+                                        color: AppColors.lightBackground,
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    child: Text(
+                                      itemData.firstName + itemData.lastName,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                              color: AppColors.black,
+                                              fontSize: 17.sp),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    )
                   ],
                 ),
               ),
               Container(
+                margin: EdgeInsets.symmetric(vertical: 2.h),
+                decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(12)),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    blackHeader(context,
-                        title: widget.permitData.permitName.toString()),
                     Container(
-                      margin: EdgeInsets.symmetric(
-                          vertical: 0.8.h, horizontal: 2.w),
                       padding:
                           EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
                       height: 5.h,
-                      width: 70.w,
+                      width: 100.w,
                       decoration: BoxDecoration(
-                          color: AppColors.lightBackground,
-                          borderRadius: BorderRadius.circular(12)),
+                          color: AppColors.primaryBlack,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(12),
+                              topRight: Radius.circular(12))),
                       child: Text(
-                        widget.permitData.permitName.toString(),
+                        widget.permitData.permitTriggerSectionInfo.first
+                            .sectionName,
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium!
-                            .copyWith(color: AppColors.black, fontSize: 17.sp),
+                            .copyWith(color: AppColors.white, fontSize: 17.sp),
                       ),
                     ),
-                    DottedBorder(
-                        borderPadding: EdgeInsets.all(8),
-                        borderType: BorderType.RRect,
-                        color: AppColors.primaryYellow,
-                        strokeWidth: 1,
-                        dashPattern: [10, 5],
-                        radius: Radius.circular(12),
-                        child: TextFormField(
-                          //controller: itemData.userInput,
-                          onChanged: (value) {},
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Please Enter Remark";
-                            }
-                          },
-                          decoration: InputDecoration(
-                            hintText: "Enter Your Remark",
-                            hintStyle: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                    color: AppColors.textGreyColor,
-                                    fontSize: 17.sp),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
+                    ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount:
+                          widget.permitData.permitTriggerSectionInfo.length,
+                      itemBuilder: (context, sectionIndex) {
+                        final sectionData = widget
+                            .permitData.permitTriggerSectionInfo[sectionIndex];
+
+                        return Column(
+                          children: List.generate(
+                            sectionData.permitTriggerSectionLinkInfo.length,
+                            (itemIndex) {
+                              final itemData = sectionData
+                                  .permitTriggerSectionLinkInfo[itemIndex];
+                              return Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.symmetric(
+                                            vertical: 0.8.h, horizontal: 2.w),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 4.w, vertical: 1.h),
+                                        height: 5.h,
+                                        width: 70.w,
+                                        decoration: BoxDecoration(
+                                            color: AppColors.lightBackground,
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        child: Text(
+                                          itemData.question,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                  color: AppColors.black,
+                                                  fontSize: 17.sp),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  DottedBorder(
+                                      borderPadding: EdgeInsets.all(8),
+                                      borderType: BorderType.RRect,
+                                      color: AppColors.primaryYellow,
+                                      strokeWidth: 1,
+                                      dashPattern: [10, 5],
+                                      radius: Radius.circular(12),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        onChanged: (value) {},
+                                        validator: (value) {
+                                          if (value!.isEmpty) {
+                                            return "Please Enter Remark";
+                                          }
+                                        },
+                                        decoration: InputDecoration(
+                                          hintText: itemData.questionManually,
+                                          hintStyle: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                  color:
+                                                      AppColors.textGreyColor,
+                                                  fontSize: 17.sp),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                        ),
+                                      )),
+                                  Divider(),
+                                  SizedBox(
+                                    height: 6.h,
+                                  )
+                                ],
+                              );
+                            },
                           ),
-                        )),
-                    Divider(),
-                    SizedBox(
-                      height: 6.h,
+                        );
+                      },
                     )
                   ],
                 ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 2.h),
+                decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(12)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+                      height: 5.h,
+                      width: 100.w,
+                      decoration: BoxDecoration(
+                          color: AppColors.primaryBlack,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(12),
+                              topRight: Radius.circular(12))),
+                      child: Text(
+                        "Approvers",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .copyWith(color: AppColors.white, fontSize: 17.sp),
+                      ),
+                    ),
+                    Column(
+                      children: List.generate(
+                        widget.permitData.permitApproverStatus.length,
+                        (itemIndex) {
+                          final itemData =
+                              widget.permitData.permitApproverStatus[itemIndex];
+                          return Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: 0.8.h, horizontal: 2.w),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 4.w, vertical: 1.h),
+                                    height: 5.h,
+                                    width: 70.w,
+                                    decoration: BoxDecoration(
+                                        color: AppColors.lightBackground,
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    child: Text(
+                                      itemData.firstName + itemData.lastName,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                              color: AppColors.black,
+                                              fontSize: 17.sp),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(height: 1.h),
+              CustomButton(
+                ontap: () {},
+                titleText: "Pending",
+                backGroundColor: AppColors.primaryYellow,
+                textColor: AppColors.white,
               )
             ],
           ),
