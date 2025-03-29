@@ -8,6 +8,8 @@ Widget kRepeatedPermitDataColumn(BuildContext context,
     required String rowTitle,
     required IconData icon,
     Color color = AppColors.white,
+    Color textColor = AppColors.white,
+    Color headerColor =AppColors.primaryBlack,
     Function()? iconTap}) {
   return Container(
     margin: EdgeInsets.symmetric(vertical: 2.h),
@@ -20,7 +22,7 @@ Widget kRepeatedPermitDataColumn(BuildContext context,
           height: 5.h,
           width: 100.w,
           decoration: BoxDecoration(
-              color: AppColors.primaryBlack,
+              color:headerColor,
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(12), topRight: Radius.circular(12))),
           child: Text(
@@ -28,7 +30,7 @@ Widget kRepeatedPermitDataColumn(BuildContext context,
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium!
-                .copyWith(color: AppColors.white, fontSize: 17.sp),
+                .copyWith(color: textColor, fontSize: 17.sp),
           ),
         ),
         Container(

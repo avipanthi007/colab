@@ -1,10 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../views/screens/dashboard/permits/permit_tabs/create_permit_details.dart';
-import 'permit_model.dart';
 
 class PermitConfig {
   final bool success;
@@ -50,7 +47,7 @@ class PermitConfigData {
 
   final List<PermitSectionInfo> permitSectionInfo;
   final List<PermitApproveInfo> permitApproveInfo;
-  final permitTriggerLabours = <LabourItem>[].obs;
+  List<LabourItem> permitTriggerLabours = <LabourItem>[].obs;
   RxInt? getActivityHeadId;
   RxInt? getActivityId;
 
@@ -63,7 +60,7 @@ class PermitConfigData {
   String userInputTexts = '';
   final userInput = TextEditingController();
   final Rx<File?> imgUploaded = Rx<File?>(null);
-  RxInt getContractorId =0.obs;
+  RxInt getContractorId = 0.obs;
 
   PermitConfigData({
     required this.id,

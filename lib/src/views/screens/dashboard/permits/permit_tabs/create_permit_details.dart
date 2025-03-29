@@ -4,6 +4,7 @@ import 'package:colab/core/theme/colors.dart';
 import 'package:colab/core/utils/constants/imageConstant.dart';
 import 'package:colab/core/utils/helper.dart';
 import 'package:colab/src/controllers/permits_controller.dart';
+import 'package:colab/src/models/approvers_list_model.dart';
 import 'package:colab/src/models/permit_config_model.dart';
 import 'package:colab/src/views/widgets/create_permit_helper.dart';
 import 'package:colab/src/views/widgets/create_permit_rcolumn_ui.dart';
@@ -15,6 +16,7 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 
+// ignore: must_be_immutable
 class CreatePermitDetails extends StatefulWidget {
   PermitConfigData data;
   CreatePermitDetails({super.key, required this.data});
@@ -27,6 +29,8 @@ class _CreatePermitDetailsState extends State<CreatePermitDetails> {
 
   RxBool switchValue = false.obs;
   final formKey = GlobalKey<FormState>();
+  RxList filterApprovers = [].obs;
+  RxList filterRequesters = [].obs;
 
   @override
   Widget build(BuildContext context) {
@@ -927,7 +931,7 @@ class _CreatePermitDetailsState extends State<CreatePermitDetails> {
 
   Widget buildLabourQuantityField(int index) {
     return Container(
-      height: 6.h,
+      height: 5.h,
       width: 18.w,
       margin: EdgeInsets.symmetric(horizontal: 0.6.h),
       decoration: BoxDecoration(
@@ -992,9 +996,67 @@ class _CreatePermitDetailsState extends State<CreatePermitDetails> {
         buildApproverDropdown(
           permitController.approverName,
         ),
-        buildCoRequesterDropdown()
+        buildSelectedApprovers(),
+        buildCoRequesterDropdown(),
+        buildSelectedRequester()
       ],
     );
+  }
+
+  Widget buildSelectedApprovers() {
+    return filterApprovers.isEmpty
+        ? SizedBox.shrink()
+        : Container(
+            margin: EdgeInsets.symmetric(vertical: 0.8.h, horizontal: 1.w),
+            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+            decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(12)),
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: filterApprovers.length,
+              itemBuilder: (context, approveIndex) {
+                return Container(
+                    margin:
+                        EdgeInsets.symmetric(vertical: 0.8.h, horizontal: 1.w),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+                    decoration: BoxDecoration(
+                        color: AppColors.lightBackground,
+                        borderRadius: BorderRadius.circular(12)),
+                    child: Text(filterApprovers[approveIndex]));
+              },
+            ),
+          );
+  }
+
+  Widget buildSelectedRequester() {
+    return filterApprovers.isEmpty
+        ? SizedBox.shrink()
+        : Container(
+            margin: EdgeInsets.symmetric(vertical: 0.8.h, horizontal: 1.w),
+            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+            decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(12)),
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: filterRequesters.length,
+              itemBuilder: (context, approveIndex) {
+                return Container(
+                    margin:
+                        EdgeInsets.symmetric(vertical: 0.8.h, horizontal: 1.w),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+                    decoration: BoxDecoration(
+                        color: AppColors.lightBackground,
+                        borderRadius: BorderRadius.circular(12)),
+                    child: Text(filterRequesters[approveIndex]));
+              },
+            ),
+          );
   }
 
   Widget buildApproverDropdown(RxString value) {
@@ -1004,47 +1066,69 @@ class _CreatePermitDetailsState extends State<CreatePermitDetails> {
       rowTitle: value.isEmpty ? "Select Individual" : value.toString(),
       icon: Icons.keyboard_arrow_down_sharp,
       color: AppColors.lightBackground,
+      headerColor: AppColors.white,
+      textColor: AppColors.primaryBlack,
       iconTap: () => showModalBottomSheet(
         context: context,
         builder: (context) => Container(
           padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
           height: 60.h,
+          decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25), topRight: Radius.circular(25))),
           child: SingleChildScrollView(
             child: Column(
               children: List.generate(permitController.approversDataList.length,
                   (index) {
-                return Obx(
-                  () => ListTile(
-                    title: Text(
-                        "${permitController.approversDataList[index].firstName} ${permitController.approversDataList[index].lastName}"),
-                    onTap: () {
-                      value.value = permitController
-                          .approversDataList[index].firstName
-                          .toString();
-                      context.pop();
-                    },
-                    trailing: Checkbox(
-                        value: permitController
-                            .approversDataList[index].approveCheckValue.value,
-                        onChanged: (value) {
-                          permitController.approversDataList[index]
-                              .approveCheckValue.value = value!;
+                return Obx(() => Row(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.symmetric(
+                              vertical: 0.8.h, horizontal: 2.w),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 4.w, vertical: 1.h),
+                          width: 75.w,
+                          decoration: BoxDecoration(
+                              color: AppColors.lightBackground,
+                              borderRadius: BorderRadius.circular(12)),
+                          child: Text(
+                              "${permitController.approversDataList[index].firstName} ${permitController.approversDataList[index].lastName}"),
+                        ),
+                        Spacer(),
+                        Checkbox(
+                            value: permitController.approversDataList[index]
+                                .approveCheckValue.value,
+                            onChanged: (value) {
+                              permitController.approversDataList[index]
+                                  .approveCheckValue.value = value!;
 
-                          if (value) {
-                            widget.data.permitApproveInfo.first.approversData
-                                .add(permitController
-                                    .approversDataList[index].id);
-                          } else {
-                            widget.data.permitApproveInfo.first.approversData
-                                .remove(permitController
-                                    .approversDataList[index].id);
-                          }
+                              if (value) {
+                                widget
+                                    .data.permitApproveInfo.first.approversData
+                                    .add(permitController
+                                        .approversDataList[index].id);
+                                filterApprovers.add(permitController
+                                        .approversDataList[index].firstName +
+                                    permitController
+                                        .approversDataList[index].lastName);
+                              } else {
+                                widget
+                                    .data.permitApproveInfo.first.approversData
+                                    .remove(permitController
+                                        .approversDataList[index].id);
+                                filterApprovers.remove(permitController
+                                        .approversDataList[index].firstName +
+                                    permitController
+                                        .approversDataList[index].lastName);
+                              }
 
-                          log(widget.data.permitApproveInfo.first.approversData
-                              .toString());
-                        }),
-                  ),
-                );
+                              log(widget
+                                  .data.permitApproveInfo.first.approversData
+                                  .toString());
+                            }),
+                      ],
+                    ));
               }),
             ),
           ),
@@ -1065,40 +1149,62 @@ class _CreatePermitDetailsState extends State<CreatePermitDetails> {
         builder: (context) => Container(
           padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
           height: 60.h,
+          decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25), topRight: Radius.circular(25))),
           child: SingleChildScrollView(
             child: Column(
               children: List.generate(permitController.approversDataList.length,
                   (index) {
-                return Obx(
-                  () => ListTile(
-                    title: Text(
-                        "${permitController.approversDataList[index].firstName} ${permitController.approversDataList[index].lastName}"),
-                    onTap: () {
-                      context.pop();
-                    },
-                    trailing: Checkbox(
-                        value: permitController
-                            .approversDataList[index].requesterCheckValue.value,
-                        onChanged: (value) {
-                          permitController.approversDataList[index]
-                              .requesterCheckValue.value = value!;
+                return Obx(() => Row(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.symmetric(
+                              vertical: 0.8.h, horizontal: 2.w),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 4.w, vertical: 1.h),
+                          width: 75.w,
+                          decoration: BoxDecoration(
+                              color: AppColors.lightBackground,
+                              borderRadius: BorderRadius.circular(12)),
+                          child: Text(
+                              "${permitController.approversDataList[index].firstName} ${permitController.approversDataList[index].lastName}"),
+                        ),
+                        Spacer(),
+                        Checkbox(
+                            value: permitController.approversDataList[index]
+                                .requesterCheckValue.value,
+                            onChanged: (value) {
+                              permitController.approversDataList[index]
+                                  .requesterCheckValue.value = value!;
 
-                          if (value) {
-                            widget.data.permitApproveInfo.first.coRequesterData
-                                .add(permitController
-                                    .approversDataList[index].id);
-                          } else {
-                            widget.data.permitApproveInfo.first.coRequesterData
-                                .remove(permitController
-                                    .approversDataList[index].id);
-                          }
+                              if (value) {
+                                widget.data.permitApproveInfo.first
+                                    .coRequesterData
+                                    .add(permitController
+                                        .approversDataList[index].id);
+                                filterRequesters.add(permitController
+                                        .approversDataList[index].firstName +
+                                    permitController
+                                        .approversDataList[index].lastName);
+                              } else {
+                                widget.data.permitApproveInfo.first
+                                    .coRequesterData
+                                    .remove(permitController
+                                        .approversDataList[index].id);
+                                filterRequesters.remove(permitController
+                                        .approversDataList[index].firstName +
+                                    permitController
+                                        .approversDataList[index].lastName);
+                              }
 
-                          log(widget
-                              .data.permitApproveInfo.first.coRequesterData
-                              .toString());
-                        }),
-                  ),
-                );
+                              log(widget
+                                  .data.permitApproveInfo.first.coRequesterData
+                                  .toString());
+                            }),
+                      ],
+                    ));
               }),
             ),
           ),

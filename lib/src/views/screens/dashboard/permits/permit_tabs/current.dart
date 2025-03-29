@@ -68,8 +68,10 @@ class _CurrentPermitsState extends State<CurrentPermits> {
                               child: Text(
                                 data.permitName?.toString() ??
                                     TextConstant.user,
+                                maxLines: 2,
                                 style: Theme.of(context)
                                     .textTheme
+                                
                                     .bodyMedium!
                                     .copyWith(
                                       color: AppColors.white,

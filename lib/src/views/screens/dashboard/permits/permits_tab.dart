@@ -82,9 +82,7 @@ class _PermitsTabState extends State<PermitsTab> with TickerProviderStateMixin {
                 ),
                 Obx(
                   () => permitController.permitCounts.isEmpty
-                      ? Center(
-                          child: CircularProgressIndicator(),
-                        )
+                      ? SizedBox.shrink()
                       : Padding(
                           padding: EdgeInsets.only(top: 4.h),
                           child: Row(

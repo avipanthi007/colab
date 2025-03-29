@@ -55,7 +55,8 @@ class CreatePermitUiWidget extends StatelessWidget {
                 Center(
                   child: GestureDetector(
                     onTap: () {
-                      context.push(RoutePath.createPermitDetails, extra: data);
+                      context.push(RoutePath.createPermitDetails,
+                          extra: PermitConfigData.fromJson(data.toJson()));
                     },
                     child: Container(
                       height: 5.h,

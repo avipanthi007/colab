@@ -375,6 +375,11 @@ class _PermitDetailsState extends State<PermitDetails> {
                                                   fontSize: 17.sp),
                                         ),
                                       ),
+                                      Switch(
+                                          activeColor: AppColors.primaryYellow,
+                                          value:
+                                              itemData.hideCheckManually == '1',
+                                          onChanged: (val) {}),
                                     ],
                                   ),
                                   DottedBorder(
